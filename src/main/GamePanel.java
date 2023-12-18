@@ -1,5 +1,7 @@
 package main;
 
+import entity.Player;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -16,13 +18,11 @@ public class GamePanel extends JPanel implements Runnable{
 
     Thread thread;      //implements Runnable (in public class)
     Handler handler = new Handler();    //add Handler
+    Player player = new Player(this, handler);
 
     // FPS
     int FPS = 60;
 
-    int PlayerX = ScreenWidth/2-tileSize/2;
-    int PlayerY = ScreenHeight/2-tileSize/2;
-    int PlayerSpeed = 5;
 
     // GAME PANEL CONSTRUCTOR
     public GamePanel() {
@@ -73,12 +73,9 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
 
-    // UPDATE INFO
+    // UPDATE
     public void update(){
-        if(handler.UP)      PlayerY -= PlayerSpeed;
-        if(handler.DOWN)    PlayerY += PlayerSpeed;
-        if(handler.LEFT)    PlayerX -= PlayerSpeed;
-        if(handler.RIGHT)   PlayerX += PlayerSpeed;
+        player.update();
     }
 
     // DRAW
@@ -89,10 +86,8 @@ public class GamePanel extends JPanel implements Runnable{
         //"Graphics2D" provides more function for graphic (color, geometry,...)
         Graphics2D graphics2d = (Graphics2D)graphics;
 
+        player.draw(graphics2d);
 
-        // Prototype Character (Just white Block)
-        graphics2d.setColor(Color.WHITE);
-        graphics2d.fillRect(PlayerX, PlayerY, tileSize, tileSize);
         graphics2d.dispose();
     }
 }
