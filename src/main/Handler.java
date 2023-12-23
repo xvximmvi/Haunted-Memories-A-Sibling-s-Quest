@@ -4,7 +4,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class Handler implements KeyListener {
-    public boolean UP, DOWN, LEFT, RIGHT;   //Move direction
+    GamePanel panel;
+
+    public boolean UP, DOWN, LEFT, RIGHT, INTERACTION;   //Move direction
+
+    // HANDLER CONSTRUCTOR
+    public Handler(GamePanel panel){
+        this.panel = panel;
+    }
+
+
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -19,6 +28,7 @@ public class Handler implements KeyListener {
         if (keyCode == KeyEvent.VK_S)   DOWN = true;    //(=0x53)
         if (keyCode == KeyEvent.VK_D)   RIGHT = true;   //(=0x44)
 
+        if (keyCode == KeyEvent.VK_E)    INTERACTION = true; //Key for interaction
     }
 
     @Override

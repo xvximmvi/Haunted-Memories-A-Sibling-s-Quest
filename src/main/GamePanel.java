@@ -1,6 +1,7 @@
 package main;
 
 import entity.Player;
+import tile.Manager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,12 +17,49 @@ public class GamePanel extends JPanel implements Runnable{
     public final int ScreenWidth = tileSize*maxScreenCol;  //768px
     public final int ScreenHeight = tileSize*maxScreenRow; //576px
 
-    Thread thread;      //implements Runnable (in public class)
-    Handler handler = new Handler();    //add Handler
-    Player player = new Player(this, handler);
+    // MAP SETTINGS
+    public final int maxMap = 4;
+    public int currentMap = 0;
+    public int maxMapCol = 20;
+    public int maxMapRow = 20;
+    public int MapWidth = tileSize*maxMapCol;
+    public int MapHeight = tileSize*maxMapRow;
+    public int TransitionMap, TransitionX, TransitionY;
 
     // FPS
     int FPS = 60;
+
+    // SYSTEM
+    Handler handler = new Handler(this);    //add Handler
+    Manager manager = new Manager(this);
+    //Sound sound = new Sound();
+    //SoundEffect soundEffect = new SoundEffect();
+    public CollisionDetection collisionDetection = new CollisionDetection(this);    //public for Player
+    //public SetAsset asset = new SetAsset(this);
+    //public UserInterface ui = new UserInterface(this);
+    Thread thread;      //implements Runnable (in public class)
+
+
+    // ENTITY AND OBJECT
+    public Player player = new Player(this, this.handler);          //public for Manager
+    //handler.setPlayer(player);
+   // public GameObject[][] object = new GameObject[maxMap][30];
+
+    // GAME STATE
+    /*public int GameState;
+    public final int titleState = 0;
+    public final int playState = 1;
+    public final int pauseState = 2;
+    public final int dialogueState = 3;
+    public final int GameWonState = 4;
+    public final int GameOverState = 5;
+    public final int characterState = 6;
+    public final int transitionState = 7;
+    public final int transitionOutState = 8;
+    public final int optionState = 9;
+    public final int menuOptionState = 10;
+    public final int howToPlayState = 11;
+    public final int creditsState = 12;*/
 
 
     // GAME PANEL CONSTRUCTOR
@@ -85,6 +123,11 @@ public class GamePanel extends JPanel implements Runnable{
 
         //"Graphics2D" provides more function for graphic (color, geometry,...)
         Graphics2D graphics2d = (Graphics2D)graphics;
+
+
+
+        // TILE
+        manager.draw(graphics2d);   //draw manager tiles
 
         player.draw(graphics2d);
 
