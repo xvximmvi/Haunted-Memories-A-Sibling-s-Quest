@@ -1,6 +1,7 @@
 package main;
 
 import entity.Player;
+import object._SuperObject;
 import tile.Manager;
 
 import javax.swing.*;
@@ -18,10 +19,10 @@ public class GamePanel extends JPanel implements Runnable{
     public final int ScreenHeight = tileSize*maxScreenRow; //576px
 
     // MAP SETTINGS
-    public final int maxMap = 4;
+    public final int maxMap = 10;
     public int currentMap = 0;
-    public int maxMapCol = 20;
-    public int maxMapRow = 20;
+    public int maxMapCol = 30;
+    public int maxMapRow = 30;
     public int MapWidth = tileSize*maxMapCol;
     public int MapHeight = tileSize*maxMapRow;
     public int TransitionMap, TransitionX, TransitionY;
@@ -35,7 +36,7 @@ public class GamePanel extends JPanel implements Runnable{
     //Sound sound = new Sound();
     //SoundEffect soundEffect = new SoundEffect();
     public CollisionDetection collisionDetection = new CollisionDetection(this);    //public for Player
-    //public SetAsset asset = new SetAsset(this);
+    public SetAsset asset = new SetAsset(this);
     //public UserInterface ui = new UserInterface(this);
     Thread thread;      //implements Runnable (in public class)
 
@@ -43,7 +44,7 @@ public class GamePanel extends JPanel implements Runnable{
     // ENTITY AND OBJECT
     public Player player = new Player(this, this.handler);          //public for Manager
     //handler.setPlayer(player);
-   // public GameObject[][] object = new GameObject[maxMap][30];
+    public _SuperObject[][] object = new _SuperObject[maxMap][30];
 
     // GAME STATE
     /*public int GameState;
@@ -73,12 +74,18 @@ public class GamePanel extends JPanel implements Runnable{
         this.setFocusable(true);
     }
 
+    // SETUP GAME
+    public void setUpGame(){
+        asset.setObject_HOSPITAL_ICU();
+    }
+
     // THREAD
     public void startThread(){          //Thread
         thread = new Thread(this);
         thread.start();
     }
-    @Override               // From implements Runnable
+
+    @Override   // From implements Runnable
     public void run() {
         //when thread started, it automatically calls run()
         //GAME LOOP (core of game)
@@ -128,6 +135,13 @@ public class GamePanel extends JPanel implements Runnable{
 
         // TILE
         manager.draw(graphics2d);   //draw manager tiles
+
+        // OBJECT
+        for(int i = 0; i < object[1].length; i++){
+            if(object[currentMap][i] != null){
+                object[currentMap][i].draw(graphics2d, this);
+            }
+        }
 
         player.draw(graphics2d);
 

@@ -26,61 +26,74 @@ public class Manager {
         //Edit: now maxMapCol/Row -> Map Size
 
         tileImage();                            //call tileImage()
-        loadMap("/Maps/Hospital/SimbasPatientRoom.txt", 0);     //call loadMap() of first Map (Simbas Patient Room)
+        loadMap("/Maps/Hospital/ICU.txt", 0);     //call loadMap() of first Map (Simbas Patient Room)
+        loadMap("/Maps/Hospital/3F_Hall.txt", 1);
+        loadMap("/Maps/Hospital/Toilet_Blue.txt", 2);
+        loadMap("/Maps/Hospital/Toilet_Green.txt", 3);
     }
 
     // TILE IMAGE
     public void tileImage() {
+        setup(0, "/Black", false);
+
         // HOSPITAL
-        setup(0, "/Hospital/Floor_GraySquareEvenClean_M", false);
-        setup(1, "/Hospital/Floor_GraySquareEvenClean_T", false);
-        setup(2, "/Hospital/Floor_GraySquareEvenDirt_M", false);
-        setup(3, "/Hospital/Floor_GraySquareEvenDirt_T", false);
-        setup(4, "/Hospital/Floor_GraySquareUnevenClean_M", false);
-        setup(5, "/Hospital/Floor_GraySquareUnevenClean_T", false);
-        setup(6, "/Hospital/Floor_GraySquareUnevenDirt_M", false);
-        setup(7, "/Hospital/Floor_GraySquareUnevenDirt_T", false);
-        setup(8, "/Hospital/Floor_GrayUniClean_M", false);
-        setup(9, "/Hospital/Floor_GrayUniClean_T", false);
-        setup(10, "/Hospital/Floor_GrayUniDirt_M", false);
-        setup(11, "/Hospital/Floor_GrayUniDirt_T", false);
-        setup(12, "/Hospital/Floor_GreenSquareEvenClean_M", false);
-        setup(13, "/Hospital/Floor_GreenSquareEvenClean_T", false);
-        setup(14, "/Hospital/Floor_GreenSquareEvenDirt_M", false);
-        setup(15, "/Hospital/Floor_GreenSquareEvenDirt_T", false);
-        setup(16, "/Hospital/Floor_GreenUniClean_M", false);
-        setup(17, "/Hospital/Floor_GreenUniClean_T", false);
-        setup(18, "/Hospital/Floor_GreenUniDirt_M", false);
-        setup(19, "/Hospital/Floor_GreenUniDirt_T", false);
-        setup(20, "/Hospital/Floor_WhiteSquareEvenClean_M", false);
-        setup(21, "/Hospital/Floor_WhiteSquareEvenClean_T", false);
-        setup(22, "/Hospital/Floor_WhiteSquareEvenDirt_M", false);
-        setup(23, "/Hospital/Floor_WhiteSquareEvenDirt_T", false);
-        setup(24, "/Hospital/Floor_WhiteSquareUnevenClean_M", false);
-        setup(25, "/Hospital/Floor_WhiteSquareUnevenClean_T", false);
-        setup(26, "/Hospital/Floor_WhiteSquareUnevenDirt_M", false);
-        setup(27, "/Hospital/Floor_WhiteSquareUnevenDirt_T", false);
-        setup(28, "/Hospital/Floor_WhiteUniClean_M", false);
-        setup(29, "/Hospital/Floor_WhiteUniClean_T", false);
-        setup(30, "/Hospital/Floor_WhiteUniDirt_M", false);
-        setup(31, "/Hospital/Floor_WhiteUniDirt_T", false);
-        setup(32, "/Hospital/Outline_BL", true);
-        setup(33, "/Hospital/Outline_BR", true);
-        setup(34, "/Hospital/Outline_V", true);
-        setup(35, "/Hospital/Outline_TL", true);
-        setup(36, "/Hospital/Outline_TR", true);
-        setup(37, "/Hospital/Outline_H", true);
-        setup(38, "/Hospital/Wall_White_B", true);
-        setup(39, "/Hospital/Wall_White_M", true);
-        setup(40, "/Hospital/Wall_White_T", true);
-        setup(41, "/Hospital/Wall_WhiteDirt_B", true);
-        setup(42, "/Hospital/Wall_WhiteDirt_M", true);
-        setup(43, "/Hospital/Wall_WhiteDirt_T", true);
-        setup(44, "/Hospital/Wall_WhiteGreen_B", true);
-        setup(45, "/Hospital/Wall_WhiteGreenDirt_B", true);
+        setup(1, "/Hospital/Floor_GraySquareEvenClean_M", false);
+        setup(2, "/Hospital/Floor_GraySquareEvenClean_T", false);
+        setup(3, "/Hospital/Floor_GraySquareEvenDirt_M", false);
+        setup(4, "/Hospital/Floor_GraySquareEvenDirt_T", false);
+        setup(5, "/Hospital/Floor_GraySquareUnevenClean_M", false);
+        setup(6, "/Hospital/Floor_GraySquareUnevenClean_T", false);
+        setup(7, "/Hospital/Floor_GraySquareUnevenDirt_M", false);
+        setup(8, "/Hospital/Floor_GraySquareUnevenDirt_T", false);
+        setup(9, "/Hospital/Floor_GrayUniClean_M", false);
+        setup(10, "/Hospital/Floor_GrayUniClean_T", false);
+        setup(11, "/Hospital/Floor_GrayUniDirt_M", false);
+        setup(12, "/Hospital/Floor_GrayUniDirt_T", false);
+        setup(13, "/Hospital/Floor_GreenSquareEvenClean_M", false);
+        setup(14, "/Hospital/Floor_GreenSquareEvenClean_T", false);
+        setup(15, "/Hospital/Floor_GreenSquareEvenDirt_M", false);
+        setup(16, "/Hospital/Floor_GreenSquareEvenDirt_T", false);
+        setup(17, "/Hospital/Floor_GreenUniClean_M", false);
+        setup(18, "/Hospital/Floor_GreenUniClean_T", false);
+        setup(19, "/Hospital/Floor_GreenUniDirt_M", false);
+        setup(20, "/Hospital/Floor_GreenUniDirt_T", false);
+        setup(21, "/Hospital/Floor_WhiteSquareEvenClean_M", false);
+        setup(22, "/Hospital/Floor_WhiteSquareEvenClean_T", false);
+        setup(23, "/Hospital/Floor_WhiteSquareEvenDirt_M", false);
+        setup(24, "/Hospital/Floor_WhiteSquareEvenDirt_T", false);
+        setup(25, "/Hospital/Floor_WhiteSquareUnevenClean_M", false);
+        setup(26, "/Hospital/Floor_WhiteSquareUnevenClean_T", false);
+        setup(27, "/Hospital/Floor_WhiteSquareUnevenDirt_M", false);
+        setup(28, "/Hospital/Floor_WhiteSquareUnevenDirt_T", false);
+        setup(29, "/Hospital/Floor_WhiteUniClean_M", false);
+        setup(30, "/Hospital/Floor_WhiteUniClean_T", false);
+        setup(31, "/Hospital/Floor_WhiteUniDirt_M", false);
+        setup(32, "/Hospital/Floor_WhiteUniDirt_T", false);
+        setup(33, "/Hospital/Outline_BL", true);
+        setup(34, "/Hospital/Outline_BR", true);
+        setup(35, "/Hospital/Outline_T", true);
+        setup(36, "/Hospital/Outline_L", true);
+        setup(37, "/Hospital/Outline_R", true);
+        setup(38, "/Hospital/Outline_B", true);
+        setup(39, "/Hospital/Outline_TL", true);
+        setup(40, "/Hospital/Outline_TR", true);
+        setup(41, "/Hospital/Wall_White_B", true);
+        setup(42, "/Hospital/Wall_White_M", true);
+        setup(43, "/Hospital/Wall_White_T", true);
+        setup(44, "/Hospital/Wall_WhiteDirt_B", true);
+        setup(45, "/Hospital/Wall_WhiteDirt_M", true);
+        setup(46, "/Hospital/Wall_WhiteDirt_T", true);
+        setup(47, "/Hospital/Wall_WhiteGreen_B", true);
+        setup(48, "/Hospital/Wall_WhiteGreenDirt_B", true);
 
+        setup(49, "/Hospital/Floor_BlackWhiteClean_M", false);
+        setup(50, "/Hospital/Floor_BlackWhiteClean_T", false);
+        setup(51, "/Hospital/Floor_BlackWhiteDirt_M", false);
+        setup(52, "/Hospital/Wall_Blue_B", true);
+        setup(53, "/Hospital/Wall_WhiteBlue_M", true);
+        setup(54, "/Hospital/Wall_WhiteWhite_T", true);
+        setup(55, "/Hospital/Outline_BL2", true);
     }
-
 
     // TILE IMAGE SETUP
     public void setup(int index, String imageName, boolean collision) {
@@ -101,7 +114,6 @@ public class Manager {
 
     // LOAD MAP
     public void loadMap(String filePath, int Map){
-
 
         //if you want to load a different Map, just call different loadMap
         //int Map -> to know in which Map we are (Identify the Map Number)
@@ -141,7 +153,7 @@ public class Manager {
         int MapCol = 0;
         int MapRow = 0;
 
-       while(MapCol < panel.maxMapCol && MapRow < panel.maxMapRow)  //instead of writing every tile
+        while(MapCol < panel.maxMapCol && MapRow < panel.maxMapRow)  //instead of writing every tile
         {
 
             int tileNum = mapTilesNum[panel.currentMap][MapCol][MapRow];        //Draw number of each read Map-Matrix

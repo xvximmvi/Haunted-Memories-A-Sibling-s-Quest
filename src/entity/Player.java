@@ -26,18 +26,25 @@ public class Player  extends Entity {
 
         Area = new Rectangle();     //create area of collision within the player character
         //4 parameter (x, y, width, height) of player character: which part of the character has collision detection
-        Area.x = 0;
-        Area.y = 60;
         Area.width = gamePanel.tileSize;    //48 pixels for 1 tile: is to precisely -> difficult to go through
         Area.height = 36;
+        Area.x = 0;
+        Area.y = gamePanel.tileSize+24-Area.height;
+
+        //Default collision for Player Reset
+        AreaDefaultX = Area.x;
+        AreaDefaultY = Area.y;
 
         setDefaultValues();     //call setDefaultValues()
         playerImage();              //call playerImage()
     }
 
     public void setDefaultValues() {
-        MapX = gamePanel.ScreenWidth/2 - gamePanel.tileSize/2;  //Middle of Map (for starters)
-        MapY = gamePanel.ScreenHeight/2 - gamePanel.tileSize/2;
+        MapX = gamePanel.tileSize*13;
+        MapY = gamePanel.tileSize*18+24;
+
+        //MapX = gamePanel.MapWidth/2 - gamePanel.tileSize/2 /*- gamePanel.tileSize*6*/;  //Middle of Map (for starters)
+        //MapY = gamePanel.MapHeight/2 - gamePanel.tileSize/2;
         Speed = 5;
         direction = "DOWN";
     }
@@ -95,8 +102,8 @@ public class Player  extends Entity {
 
 
             // CHECK OBJECT COLLISION
-            //int objectIndex = gamePanel.collisionDetection.DetectObject(this, true);
-            //Interaction(objectIndex);     //interaction with object
+            int objectIndex = gamePanel.collisionDetection.DetectObject(this, true);
+            Interaction(objectIndex);     //interaction with object
 
             // if Collision is false, Player can move
             if(!collisionOn) {
@@ -120,7 +127,15 @@ public class Player  extends Entity {
 
     }
 
-    public void draw(Graphics2D graphics2d) {
+    // OBJECT INTERACTION
+    public void Interaction(int index) {
+        // Index as confirmation of collision
+        if(index != 999) {   //if index isn't 999, then we haven't touched an object
+            //panel.object[index] = null;     //if object is touched, then delete it -> "Pick it up"
+        }
+    }
+
+        public void draw(Graphics2D graphics2d) {
         //draw object with current information
 
         // Prototype Character (Just white Block)

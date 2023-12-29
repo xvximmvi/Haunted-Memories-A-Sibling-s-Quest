@@ -28,7 +28,7 @@ public class Game {
         window.setVisible(true);            //able to see the window
 
         // START GAME
-        //panel.setUpGame();                  //start setting up the Game
+        panel.setUpGame();                  //start setting up the Game
         panel.startThread();               //start thread
     }
 

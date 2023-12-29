@@ -85,7 +85,7 @@ public class CollisionDetection {
     }
 
     // OBJECT DETECTION
-    /*public int DetectObject(Entity entity, boolean player){     //Player or NPCs
+    public int DetectObject(Entity entity, boolean player){     //Player or NPCs
         int index = 999;        //If Player is touching Object -> we return Index (can be any number)
 
         for(int i = 0; i < panel.object[2].length; i++){   //scan current object's Area
@@ -156,6 +156,5 @@ public class CollisionDetection {
             }
         }
         return index;       //return index
-    }*/
+    }
 }
-

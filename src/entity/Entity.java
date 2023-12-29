@@ -15,8 +15,6 @@ public class Entity {
 
     public int spriteCounter = 0;   //count up to change position
     public int spriteNum = 1;       //number of sprite
-    public int InteractionSpriteCounter = 0;
-    public int InteractionSpriteNum = 1;
 
     // COLLISION
     public Rectangle Area;          //Collision Area
