@@ -1,11 +1,17 @@
 package main;
 
+import entity.Entity;
 import entity.Player;
-import object._SuperObject;
+import sound.Sound;
+import sound.SoundEffect;
 import tile.Manager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class GamePanel extends JPanel implements Runnable{
     final int originalTileSize = 48;//16x16px tile (Standard size for retro 2D Games)
@@ -26,6 +32,7 @@ public class GamePanel extends JPanel implements Runnable{
     public int MapWidth = tileSize*maxMapCol;
     public int MapHeight = tileSize*maxMapRow;
     public int TransitionMap, TransitionX, TransitionY;
+    public String TransitionDirection;
 
     // FPS
     int FPS = 60;
@@ -33,21 +40,23 @@ public class GamePanel extends JPanel implements Runnable{
     // SYSTEM
     Handler handler = new Handler(this);    //add Handler
     Manager manager = new Manager(this);
-    //Sound sound = new Sound();
-    //SoundEffect soundEffect = new SoundEffect();
+    Sound sound = new Sound();
+    SoundEffect soundEffect = new SoundEffect();
     public CollisionDetection collisionDetection = new CollisionDetection(this);    //public for Player
     public SetAsset asset = new SetAsset(this);
-    //public UserInterface ui = new UserInterface(this);
+    public UserInterface ui = new UserInterface(this);
     Thread thread;      //implements Runnable (in public class)
 
 
     // ENTITY AND OBJECT
     public Player player = new Player(this, this.handler);          //public for Manager
     //handler.setPlayer(player);
-    public _SuperObject[][] object = new _SuperObject[maxMap][30];
+    public Entity[][] object = new Entity[maxMap][50];
+    public Entity[][] NPC = new Entity[maxMap][10];
+    ArrayList<Entity> entityList = new ArrayList<>();
 
     // GAME STATE
-    /*public int GameState;
+    public int GameState;
     public final int titleState = 0;
     public final int playState = 1;
     public final int pauseState = 2;
@@ -60,7 +69,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int optionState = 9;
     public final int menuOptionState = 10;
     public final int howToPlayState = 11;
-    public final int creditsState = 12;*/
+    public final int creditsState = 12;
 
 
     // GAME PANEL CONSTRUCTOR
@@ -77,6 +86,9 @@ public class GamePanel extends JPanel implements Runnable{
     // SETUP GAME
     public void setUpGame(){
         asset.setObject_HOSPITAL_ICU();
+        asset.setNPC_HOSPITAL_ICU();
+        //playMusic(0);
+        GameState = titleState;
     }
 
     // THREAD
@@ -120,7 +132,23 @@ public class GamePanel extends JPanel implements Runnable{
 
     // UPDATE
     public void update(){
-        player.update();
+        if(GameState == playState){
+            // PLAYER
+            player.update();        //update Player position
+
+            // NPC
+            for(int i = 0; i < NPC[1].length; i++){
+                if(NPC[currentMap][i] != null) {
+                    NPC[currentMap][i].update();
+                }
+            }
+
+            if(ui.playTime <= 0){   //if Play Time is up
+                GameState = GameOverState;
+                //playSoundEffect(1);
+            }
+
+        }
     }
 
     // DRAW
@@ -131,20 +159,62 @@ public class GamePanel extends JPanel implements Runnable{
         //"Graphics2D" provides more function for graphic (color, geometry,...)
         Graphics2D graphics2d = (Graphics2D)graphics;
 
-
-
-        // TILE
-        manager.draw(graphics2d);   //draw manager tiles
-
-        // OBJECT
-        for(int i = 0; i < object[1].length; i++){
-            if(object[currentMap][i] != null){
-                object[currentMap][i].draw(graphics2d, this);
-            }
+        // TITLE SCREEN
+        if(GameState == titleState){
+            ui.draw(graphics2d);
         }
 
-        player.draw(graphics2d);
+        // OTHER
+        else {
+            // TILE
+            manager.draw(graphics2d);   //draw manager tiles
+
+            // ADD ENTITIES TO THE LIST
+
+            // PLAYER
+            entityList.add(player);
+
+            // NPC
+            for(int i = 0; i < NPC[1].length; i++)
+                if(NPC[currentMap][i] != null)
+                    entityList.add(NPC[currentMap][i]);
+
+            // OBJECT
+            for(int i = 0; i < object[1].length; i++)
+                if(object[currentMap][i] != null)
+                    entityList.add(object[currentMap][i]);
+
+            // SORT
+            entityList.sort(new Comparator<Entity>() {
+                @Override
+                public int compare(Entity e1, Entity e2) {
+                    return Integer.compare(e1.MapY, e2.MapY);
+                }
+            });
+
+            // DRAW ENTITIES
+            for (Entity entity : entityList) entity.draw(graphics2d);
+
+            // EMPTY ENTITY LIST
+            entityList.clear();
+
+            // UI
+            ui.draw(graphics2d);
+        }
 
         graphics2d.dispose();
+    }
+
+    // MUSIC AND SOUND EFFECT
+    public void playMusic(int i){
+        sound.setFile(i);   //choose file
+        sound.play();       //play file
+        sound.loop();       //continue/repeat in loop
+    }
+    public void stopMusic(){
+        sound.stop();   //stop current music
+    }
+    public void playSoundEffect(int i){
+        soundEffect.play(i);       //only play once (no loop)
     }
 }

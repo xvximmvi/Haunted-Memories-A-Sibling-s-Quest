@@ -1,26 +1,20 @@
 package object.Hospital;
 
-import object._SuperObject;
+import entity.Entity;
+import main.GamePanel;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
-import java.util.Objects;
 
-public class HOSPITAL_X_Ray_TV_Off extends _SuperObject {
-    public HOSPITAL_X_Ray_TV_Off() {
+public class HOSPITAL_X_Ray_TV_Off extends Entity {
+    public HOSPITAL_X_Ray_TV_Off(GamePanel gamePanel) {
+        super(gamePanel);
         name = "X-Ray_TV_Off";
         ObjectWidth = 62*2+31;
         ObjectHeight = 44*2+22;
 
         Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+        DOWN1 = setup("/Objects/Hospital/" + name + ".png", ObjectWidth, ObjectHeight);
 
-        try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Objects/Hospital/" + name + ".png")));
-            utility.scaleImage(image, ObjectWidth, ObjectHeight);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         collision = true;
     }
 }

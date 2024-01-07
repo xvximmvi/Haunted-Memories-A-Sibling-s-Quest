@@ -1,26 +1,20 @@
 package object.General;
 
-import object._SuperObject;
+import entity.Entity;
+import main.GamePanel;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
-import java.util.Objects;
 
-public class GENERAL_Blood_Scattered extends _SuperObject {
-    public GENERAL_Blood_Scattered() {
+public class GENERAL_Blood_Scattered extends Entity {
+    public GENERAL_Blood_Scattered(GamePanel gamePanel) {
+        super(gamePanel);
         name = "Blood_Scattered";
-        ObjectWidth = gamePanel.tileSize;
-        ObjectHeight = gamePanel.tileSize;
+        ObjectWidth = 86*2+43;
+        ObjectHeight = 39*2+19;
 
         Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+        DOWN1 = setup("/Objects/General/" + name + ".png", ObjectWidth, ObjectHeight);
 
-        try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Objects/General/" + name + ".png")));
-            utility.scaleImage(image, ObjectWidth, ObjectHeight);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         collision = true;
     }
 }

@@ -1,26 +1,20 @@
 package object.General;
 
-import object._SuperObject;
+import entity.Entity;
+import main.GamePanel;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
-import java.util.Objects;
 
-public class GENERAL_DeskChair_R extends _SuperObject {
-    public GENERAL_DeskChair_R() {
+public class GENERAL_DeskChair_R extends Entity {
+    public GENERAL_DeskChair_R(GamePanel gamePanel) {
+        super(gamePanel);
         name = "DeskChair_R";
-        ObjectWidth = gamePanel.tileSize;
-        ObjectHeight = gamePanel.tileSize;
+        ObjectWidth = 20*2+10;
+        ObjectHeight = 32*2+16;
 
         Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+        DOWN1 = setup("/Objects/General/" + name + ".png", ObjectWidth, ObjectHeight);
 
-        try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Objects/General/" + name + ".png")));
-            utility.scaleImage(image, ObjectWidth, ObjectHeight);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         collision = true;
     }
 }

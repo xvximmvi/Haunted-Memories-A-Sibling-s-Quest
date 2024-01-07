@@ -1,26 +1,20 @@
 package object.General;
 
-import object._SuperObject;
+import entity.Entity;
+import main.GamePanel;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
-import java.util.Objects;
 
-public class GENERAL_Paper_Ripped extends _SuperObject {
-    public GENERAL_Paper_Ripped() {
+public class GENERAL_Paper_Ripped extends Entity {
+    public GENERAL_Paper_Ripped(GamePanel gamePanel) {
+        super(gamePanel);
         name = "Paper_Ripped";
-        ObjectWidth = gamePanel.tileSize;
-        ObjectHeight = gamePanel.tileSize;
+        ObjectWidth = 28*2+14;
+        ObjectHeight = 26*2+13;
 
         Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+        DOWN1 = setup("/Objects/General/" + name + ".png", ObjectWidth, ObjectHeight);
 
-        try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Objects/General/" + name + ".png")));
-            utility.scaleImage(image, ObjectWidth, ObjectHeight);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         collision = true;
     }
 }

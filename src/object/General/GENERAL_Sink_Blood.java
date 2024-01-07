@@ -1,26 +1,20 @@
 package object.General;
 
-import object._SuperObject;
+import entity.Entity;
+import main.GamePanel;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
-import java.util.Objects;
 
-public class GENERAL_Sink_Blood extends _SuperObject {
-    public GENERAL_Sink_Blood() {
+public class GENERAL_Sink_Blood extends Entity {
+    public GENERAL_Sink_Blood(GamePanel gamePanel) {
+        super(gamePanel);
         name = "Sink_Blood";
-        ObjectWidth = gamePanel.tileSize;
-        ObjectHeight = gamePanel.tileSize;
+        ObjectWidth = 28*2+14;
+        ObjectHeight = 56*2+28;
 
         Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+        DOWN1 = setup("/Objects/General/" + name + ".png", ObjectWidth, ObjectHeight);
 
-        try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Objects/General/" + name + ".png")));
-            utility.scaleImage(image, ObjectWidth, ObjectHeight);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         collision = true;
     }
 }

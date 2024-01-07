@@ -1,26 +1,20 @@
 package object.General;
 
-import object._SuperObject;
+import entity.Entity;
+import main.GamePanel;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
-import java.util.Objects;
 
-public class GENERAL_Exit_Green_Light extends _SuperObject {
-    public GENERAL_Exit_Green_Light() {
+public class GENERAL_Exit_Green_Light extends Entity {
+    public GENERAL_Exit_Green_Light(GamePanel gamePanel) {
+        super(gamePanel);
         name = "Exit_Green_Light";
-        ObjectWidth = gamePanel.tileSize;
-        ObjectHeight = gamePanel.tileSize;
+        ObjectWidth = 47*2+23;
+        ObjectHeight = 37*2+18;
 
         Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+        DOWN1 = setup("/Objects/General/" + name + ".png", ObjectWidth, ObjectHeight);
 
-        try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Objects/General/" + name + ".png")));
-            utility.scaleImage(image, ObjectWidth, ObjectHeight);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         collision = true;
     }
 }

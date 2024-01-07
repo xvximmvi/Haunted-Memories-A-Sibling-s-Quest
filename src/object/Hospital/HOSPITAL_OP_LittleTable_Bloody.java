@@ -1,26 +1,20 @@
 package object.Hospital;
 
-import object._SuperObject;
+import entity.Entity;
+import main.GamePanel;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
-import java.util.Objects;
 
-public class HOSPITAL_OP_LittleTable_Bloody extends _SuperObject {
-    public HOSPITAL_OP_LittleTable_Bloody() {
+public class HOSPITAL_OP_LittleTable_Bloody extends Entity {
+    public HOSPITAL_OP_LittleTable_Bloody(GamePanel gamePanel) {
+        super(gamePanel);
         name = "OP_LittleTable_Bloody";
         ObjectWidth = 32*2+16;
         ObjectHeight = 40*2+20;
 
         Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+        DOWN1 = setup("/Objects/Hospital/" + name + ".png", ObjectWidth, ObjectHeight);
 
-        try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Objects/Hospital/" + name + ".png")));
-            utility.scaleImage(image, ObjectWidth, ObjectHeight);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         collision = true;
     }
 }

@@ -5,6 +5,7 @@ import main.Utility;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -100,6 +101,7 @@ public class Manager {
         //scale image so that Graphics2D doesn't have to do it and can draw faster
         // Edited afterward due to space redundancy in code
         Utility utility = new Utility();
+        BufferedImage image = null;
 
         try {
             tile[index] = new Tile();   // Create new Tile
@@ -164,7 +166,6 @@ public class Manager {
             int MapY = MapRow*panel.tileSize;
             int ScreenX = MapX - panel.player.MapX + panel.player.ScreenX; //coordinates to get to a specific tile; compared to the player where is the tile
             int ScreenY = MapY - panel.player.MapY + panel.player.ScreenY;
-
 
 
             // STOP CAMERA AT EDGE

@@ -1,26 +1,20 @@
 package object.Hospital;
 
-import object._SuperObject;
+import entity.Entity;
+import main.GamePanel;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
-import java.util.Objects;
 
-public class HOSPITAL_Wheelchair_B extends _SuperObject {
-    public HOSPITAL_Wheelchair_B() {
+public class HOSPITAL_Wheelchair_B extends Entity {
+    public HOSPITAL_Wheelchair_B(GamePanel gamePanel) {
+        super(gamePanel);
         name = "Wheelchair_B";
-        ObjectWidth = 27*2+13;
-        ObjectHeight = 24*2+12;
+        ObjectWidth = 27*3+13;
+        ObjectHeight = 24*3+12;
 
         Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+        DOWN1 = setup("/Objects/Hospital/" + name + ".png", ObjectWidth, ObjectHeight);
 
-        try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Objects/Hospital/" + name + ".png")));
-            utility.scaleImage(image, ObjectWidth, ObjectHeight);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         collision = true;
     }
 }

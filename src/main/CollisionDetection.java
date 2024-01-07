@@ -86,8 +86,9 @@ public class CollisionDetection {
 
     // OBJECT DETECTION
     public int DetectObject(Entity entity, boolean player){     //Player or NPCs
-        int index = 999;        //If Player is touching Object -> we return Index (can be any number)
+        int objectIndex = 999;        //If Player is touching Object -> we return Index (can be any number)
 
+        // Reason for "panel.object[2].length;" and its Number "2": IDK. It won't fucking work without it. Kill me.
         for(int i = 0; i < panel.object[2].length; i++){   //scan current object's Area
             if(panel.object[panel.currentMap][i] != null){                //Check if it is null -> if not than continue
 
@@ -103,13 +104,13 @@ public class CollisionDetection {
                     case "UP" -> {
                         entity.Area.y -= entity.Speed;      //when going UP -> Y-Coordinate - Speed (4 px)
 
-                        //automatically checks if entity.Area & panel.object[i].Area have intersection
+                        //automatically checks if entity.Area & panel.object[panel.currentMap][i].Area have intersection
                         if (entity.Area.intersects(panel.object[panel.currentMap][i].Area)) {     //A intersection B
                             if (panel.object[panel.currentMap][i].collision)  //collision == true -> if Object is solid (has collision Area)...
                                 entity.collisionOn = true;  //then collision is happening
 
                             if (player)                     //player == true (player from boolean)
-                                index = i;                  //if it is player, we return the index, if it is an NPC we ignore
+                                objectIndex = i;                  //if it is player, we return the index, if it is an NPC we ignore
                         }
                     }
                     case "DOWN" -> {
@@ -119,7 +120,7 @@ public class CollisionDetection {
                                 entity.collisionOn = true;
                             }
                             if (player) {                     //player == true
-                                index = i;
+                                objectIndex = i;
                             }
                         }
                     }
@@ -130,7 +131,7 @@ public class CollisionDetection {
                                 entity.collisionOn = true;
                             }
                             if (player) {                     //player == true
-                                index = i;
+                                objectIndex = i;
                             }
                         }
                     }
@@ -141,7 +142,7 @@ public class CollisionDetection {
                                 entity.collisionOn = true;
                             }
                             if (player) {                     //player == true
-                                index = i;
+                                objectIndex = i;
                             }
                         }
                     }
@@ -155,6 +156,102 @@ public class CollisionDetection {
                 panel.object[panel.currentMap][i].Area.y = panel.object[panel.currentMap][i].AreaDefaultY;
             }
         }
-        return index;       //return index
+        return objectIndex;       //return index
+    }
+
+    // NPC DETECTION
+    public int DetectEntity(Entity entity, Entity[][] target){
+        int entityIndex = 999;        //If Player is touching Entity -> we return Index (can be any number)
+
+        for(int i = 0; i < target.length; i++){   //scan current Entity's Area
+            if(target[panel.currentMap][i] != null){                //Check if it is null -> if not than continue
+
+                //get entity's collision area position
+                entity.Area.x = entity.MapX + entity.Area.x;
+                entity.Area.y = entity.MapY + entity.Area.y;
+
+                //get the NPC's collision area position
+                target[panel.currentMap][i].Area.x = target[panel.currentMap][i].MapX + target[panel.currentMap][i].Area.x; //no need for coordinates like in TileDetection
+                target[panel.currentMap][i].Area.y = target[panel.currentMap][i].MapY + target[panel.currentMap][i].Area.y;
+
+                switch (entity.direction) {
+                    case "UP" -> {
+                        entity.Area.y -= entity.Speed;      //when going UP -> Y-Coordinate - Speed (4 px)
+
+                        //automatically checks if entity.Area & target[panel.currentMap][i].Area have intersection
+                        if (entity.Area.intersects(target[panel.currentMap][i].Area)) {     //A intersection B
+                            entity.collisionOn = true;  //then collision is happening
+                            entityIndex = i;                  //if it is player, we return the index, if it is an NPC we ignore
+                        }
+                    }
+                    case "DOWN" -> {
+                        entity.Area.y += entity.Speed;
+                        if (entity.Area.intersects(target[panel.currentMap][i].Area)) {
+                            entity.collisionOn = true;
+                            entityIndex = i;
+                        }
+                    }
+                    case "LEFT" -> {
+                        entity.Area.x -= entity.Speed;
+                        if (entity.Area.intersects(target[panel.currentMap][i].Area)) {
+                            entity.collisionOn = true;
+                            entityIndex = i;
+                        }
+                    }
+                    case "RIGHT" -> {
+                        entity.Area.x += entity.Speed;
+                        if (entity.Area.intersects(target[panel.currentMap][i].Area)) {
+                            entity.collisionOn = true;
+                            entityIndex = i;
+                        }
+                    }
+                }
+
+                //reset Areas -> otherwise entity.MapX and entity.MapY keep increasing (Line 99 & 100)
+                entity.Area.x = entity.AreaDefaultX;
+                entity.Area.y = entity.AreaDefaultY;
+                target[panel.currentMap][i].Area.x = target[panel.currentMap][i].AreaDefaultX;
+                target[panel.currentMap][i].Area.y = target[panel.currentMap][i].AreaDefaultY;
+            }
+        }
+        return entityIndex;       //return index
+    }
+
+    // PLAYER DETECTION
+    public void DetectPlayer(Entity entity) {
+        //get entity's collision area position
+        entity.Area.x = entity.MapX + entity.Area.x;
+        entity.Area.y = entity.MapY + entity.Area.y;
+
+        //get the object's collision area position
+        panel.player.Area.x = panel.player.MapX + panel.player.Area.x; //no need for coordinates like in TileDetection
+        panel.player.Area.y = panel.player.MapY + panel.player.Area.y;
+
+        switch (entity.direction) {
+            case "UP" -> {
+                entity.Area.y -= entity.Speed;      //when going UP -> Y-Coordinate - Speed (4 px)
+
+                //automatically checks if entity.Area & panel.player.Area have intersection
+                if (entity.Area.intersects(panel.player.Area))  entity.collisionOn = true;  //A intersection B -> then collision is happening
+            }
+            case "DOWN" -> {
+                entity.Area.y += entity.Speed;
+                if (entity.Area.intersects(panel.player.Area))  entity.collisionOn = true;
+            }
+            case "LEFT" -> {
+                entity.Area.x -= entity.Speed;
+                if (entity.Area.intersects(panel.player.Area))  entity.collisionOn = true;
+            }
+            case "RIGHT" -> {
+                entity.Area.x += entity.Speed;
+                if (entity.Area.intersects(panel.player.Area))  entity.collisionOn = true;
+            }
+        }
+
+        //reset Areas -> otherwise entity.MapX and entity.MapY keep increasing (Line 99 & 100)
+        entity.Area.x = entity.AreaDefaultX;
+        entity.Area.y = entity.AreaDefaultY;
+        panel.player.Area.x = panel.player.AreaDefaultX;
+        panel.player.Area.y = panel.player.AreaDefaultY;
     }
 }

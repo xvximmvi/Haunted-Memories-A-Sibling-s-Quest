@@ -11,13 +11,27 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Player  extends Entity {
-    GamePanel gamePanel;
     Handler handler;
     public final int ScreenX, ScreenY;  //Coordinate of Screen
 
+    int InteractionCounter=0;           //InteractionCounter: slower interaction with objects
+    int ObjectCounter = 0;
+
+    // CHARACTER ATTRIBUTES
+    public int FullCompletion = 56;
+    Boolean[] complete = new Boolean[FullCompletion+1];
+
+    public final String CharacterName = "Simba Yamamoto";
+    public final String CharacterAge = "10";
+    public final String Level = "1";
+    public final String Location1 = "Hospital";
+
+
+
     // PLAYER CONSTRUCTOR
     public Player(GamePanel gamePanel, Handler handler) {
-        this.gamePanel = gamePanel;
+        super(gamePanel);           //Calling Constructor of the Super-Class of this Class
+
         this.handler = handler;
 
         ScreenX = gamePanel.ScreenWidth/2;      //Center of screen
@@ -40,48 +54,30 @@ public class Player  extends Entity {
     }
 
     public void setDefaultValues() {
-        MapX = gamePanel.tileSize*13;
+        MapX = gamePanel.tileSize*13;       //Begin next to Simbas ICU Bed
         MapY = gamePanel.tileSize*18+24;
 
-        //MapX = gamePanel.MapWidth/2 - gamePanel.tileSize/2 /*- gamePanel.tileSize*6*/;  //Middle of Map (for starters)
-        //MapY = gamePanel.MapHeight/2 - gamePanel.tileSize/2;
         Speed = 5;
         direction = "DOWN";
     }
 
     // PLAYER IMAGES
     public void playerImage(){
-        UP1 = setup("Simba_Back_1");
-        UP2 = setup("Simba_Back_2");
-        UP3 = setup("Simba_Back_3");
+        UP1 = setup("/Simba/Walking/Simba_Back_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        UP2 = setup("/Simba/Walking/Simba_Back_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        UP3 = setup("/Simba/Walking/Simba_Back_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
 
-        DOWN1 = setup("Simba_Front_1");
-        DOWN2 = setup("Simba_Front_2");
-        DOWN3 = setup("Simba_Front_3");
+        DOWN1 = setup("/Simba/Walking/Simba_Front_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        DOWN2 = setup("/Simba/Walking/Simba_Front_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        DOWN3 = setup("/Simba/Walking/Simba_Front_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
 
-        LEFT1 = setup("Simba_Left_1");
-        LEFT2 = setup("Simba_Left_2");
-        LEFT3 = setup("Simba_Left_3");
+        LEFT1 = setup("/Simba/Walking/Simba_Left_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        LEFT2 = setup("/Simba/Walking/Simba_Left_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        LEFT3 = setup("/Simba/Walking/Simba_Left_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
 
-        RIGHT1 = setup("Simba_Right_1");
-        RIGHT2 = setup("Simba_Right_2");
-        RIGHT3 = setup("Simba_Right_3");
-    }
-
-    // PLAYER IMAGE SETUP
-    public BufferedImage setup(String imageName){
-        //scale Image so that Graphics2D can skip that part and draw faster
-        Utility utility = new Utility();
-        BufferedImage scaledImage = null;
-
-        try{
-            scaledImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/Simba/Walking/" + imageName + ".png")));
-            scaledImage = utility.scaleImage(scaledImage, gamePanel.tileSize, gamePanel.tileSize+24);
-
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-        return scaledImage;
+        RIGHT1 = setup("/Simba/Walking/Simba_Right_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        RIGHT2 = setup("/Simba/Walking/Simba_Right_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        RIGHT3 = setup("/Simba/Walking/Simba_Right_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
     }
 
     // UPDATE PLAYER POSITION
@@ -95,15 +91,23 @@ public class Player  extends Entity {
             if(handler.LEFT)    direction = "LEFT";
             if(handler.RIGHT)   direction = "RIGHT";
 
-            // CHECK TILE COLLISION
+
+            // COLLISION DETECTION -------------------------------------------------------------------------------------
             collisionOn = false;    //Default as false
+
+            // CHECK TILE COLLISION
             //player Class is a subclass of the Entity class
             gamePanel.collisionDetection.DetectTile(this);  //CollisionDetection receives Player class as Entity
 
 
             // CHECK OBJECT COLLISION
             int objectIndex = gamePanel.collisionDetection.DetectObject(this, true);
-            Interaction(objectIndex);     //interaction with object
+            InteractionObject(objectIndex);     //interaction with object
+
+            // CHECK NPC COLLISION
+            int NPCIndex = gamePanel.collisionDetection.DetectEntity(this, gamePanel.NPC);
+            InteractionNPC(NPCIndex);
+
 
             // if Collision is false, Player can move
             if(!collisionOn) {
@@ -128,14 +132,54 @@ public class Player  extends Entity {
     }
 
     // OBJECT INTERACTION
-    public void Interaction(int index) {
+    public void InteractionObject(int index) {
         // Index as confirmation of collision
         if(index != 999) {   //if index isn't 999, then we haven't touched an object
             //panel.object[index] = null;     //if object is touched, then delete it -> "Pick it up"
+
+            String ObjectName = gamePanel.object[gamePanel.currentMap][index].name;   //Which object is touched
+
+            InteractionCounter++;       //Key-press takes to long -> interact more than once at a time
+            if (InteractionCounter > 9) {  //count to 9 than do next interaction
+                if (handler.INTERACT) {
+                    switch (gamePanel.currentMap) {
+                        case 0 -> {
+                            switch (ObjectName) {
+                                case "Door" -> {
+                                    //gamePanel.playSoundEffect(4);
+                                    switchMap(1, 2, 25, "RIGHT");
+                                }
+                            }
+                        }
+                        case 1 -> {
+                            switch (ObjectName) {
+                                case "Door_Right" -> {
+                                    if (MapY > 18*gamePanel.tileSize) {
+                                        //gamePanel.playSoundEffect(4);
+                                        switchMap(0, 20, 10, "DOWN");
+                                    } else {
+                                        switchMap(3, 24, 16, "LEFT");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-        public void draw(Graphics2D graphics2d) {
+    // NPC INTERACTION
+    public void InteractionNPC(int index) {
+        if(index != 999) {
+            if(handler.INTERACT) {
+                gamePanel.GameState = gamePanel.dialogueState;
+                gamePanel.NPC[gamePanel.currentMap][index].Speak();
+            }
+        }
+    }
+
+    public void draw(Graphics2D graphics2d) {
         //draw object with current information
 
         // Prototype Character (Just white Block)
@@ -191,5 +235,14 @@ public class Player  extends Entity {
 
         //ScreenX and ScreenY don't change
         graphics2d.drawImage(image, x, y, null);    //null: image observer  +8 to make character bigger
+    }
+
+    // SWITCH ROOMS/MAPS
+    public void switchMap(int Map, int x, int y, String direction) {
+        gamePanel.TransitionMap = Map;
+        gamePanel.TransitionX = x;
+        gamePanel.TransitionY = y;
+        gamePanel.TransitionDirection = direction;
+        gamePanel.GameState = gamePanel.transitionState;
     }
 }
