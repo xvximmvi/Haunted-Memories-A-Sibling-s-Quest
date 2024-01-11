@@ -18,14 +18,14 @@ import java.awt.event.KeyListener;
             > ENTER
         - PLAY STATE
             > W A S D
-            > SPACE
+            > E
             > P
             > C
             > O
         - PAUSE STATE
             > P
         - DIALOGUE STATE
-            > SPACE
+            > E
         - CHARACTER STATE
             > C
         - OPTION STATE
@@ -175,6 +175,12 @@ public class Handler implements KeyListener {
                 panel.GameState = panel.characterState;
             }
 
+            // INVENTORY STATE
+            if(keyCode == KeyEvent.VK_I){
+                //panel.playSoundEffect(5);
+                panel.GameState = panel.inventoryState;
+            }
+
             // OPTION STATE
             if(keyCode == KeyEvent.VK_O){
                 //panel.playSoundEffect(5);
@@ -187,8 +193,11 @@ public class Handler implements KeyListener {
 
         }
 
+        // TODO: Add Sound Effect to everytime when GameState is changed
+
         // PAUSE STATE
         else if(panel.GameState == panel.pauseState){
+            //TODO: stop Play-Music and start Main-Title Music (or optional "Pause-Music")
             if (keyCode == KeyEvent.VK_P){
                 //panel.playSoundEffect(5);
                 panel.GameState = panel.playState;
@@ -215,6 +224,36 @@ public class Handler implements KeyListener {
             }
         }
 
+        // INVENTORY STATE
+        else if(panel.GameState == panel.inventoryState){
+            if(keyCode == KeyEvent.VK_I) {
+                //panel.playSoundEffect(5);
+                panel.GameState = panel.playState;
+            }
+
+            // TODO: Add Sound Effect to everytime when cursor is moved
+            if (keyCode == KeyEvent.VK_W) {
+                if(panel.ui.slotRow != 0) {
+                    panel.ui.slotRow--;
+                }
+            }
+            if (keyCode == KeyEvent.VK_A) {
+                if(panel.ui.slotCol != 0) {
+                    panel.ui.slotCol--;
+                }
+            }
+            if (keyCode == KeyEvent.VK_S) {
+                if(panel.ui.slotRow != 3) {
+                    panel.ui.slotRow++;
+                }
+            }
+            if (keyCode == KeyEvent.VK_D) {
+                if(panel.ui.slotCol != 4) {
+                    panel.ui.slotCol++;
+                }
+            }
+        }
+
         // OPTION STATE
         else if(panel.GameState == panel.optionState){
             if(keyCode == KeyEvent.VK_O) {
@@ -234,6 +273,8 @@ public class Handler implements KeyListener {
             } else if (panel.ui.optionState == 2 || panel.ui.optionState == 3 || panel.ui.optionState == 4) {
                 maxCommand = 1;
             }
+
+            // TODO: Add Sound Effect to everytime when cursor is moved
 
             if(keyCode == KeyEvent.VK_W) {
                 panel.ui.command--;

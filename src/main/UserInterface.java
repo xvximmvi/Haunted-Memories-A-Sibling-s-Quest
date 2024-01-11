@@ -80,6 +80,11 @@ public class UserInterface {
     public int optionState = 0;
     public int menuState = 0;
 
+    // INVENTORY
+    public int slotCol = 0;
+    public int slotRow = 0;
+
+
     // UI CONSTRUCTOR
     public UserInterface(GamePanel panel){
         this.panel = panel;
@@ -226,6 +231,12 @@ public class UserInterface {
         if(panel.GameState == panel.creditsState){
             CreditsScreen();
 
+        }
+
+        // INVENTORY STATE
+        if(panel.GameState == panel.inventoryState){
+            InventoryScreen();
+            CharacterScreen();
         }
 
     }
@@ -855,6 +866,71 @@ public class UserInterface {
             graphics2D.drawString(Info, InfoX, textY);
             textY += lineHeight;
         }
+    }
+
+    // INVENTORY SCREEN
+    public void InventoryScreen() {
+        // INVENTOR WINDOW
+        final int characterWindowX = panel.tileSize*11;
+        final int characterWindowY = panel.tileSize;
+        final int characterWindowWidth = panel.tileSize*6;
+        final int characterWindowHeight = panel.tileSize*5;
+        Window(characterWindowX, characterWindowY, characterWindowWidth, characterWindowHeight);
+
+        // SLOT
+        final int slotXstart = characterWindowX + panel.tileSize/2;
+        final int slotYstart = characterWindowY + panel.tileSize/2;
+        int slotX = slotXstart;
+        int slotY = slotYstart;
+
+        // DRAW PLAYER'S ITEMS
+        for(int i = 0; i < panel.player.Inventory.size(); i++){
+            graphics2D.drawImage(panel.player.Inventory.get(i).DOWN1, slotX+(panel.tileSize - panel.player.Inventory.get(i).ObjectWidth)/2, slotY+(panel.tileSize - panel.player.Inventory.get(i).ObjectHeight)/2, null);
+
+            slotX += panel.tileSize;
+
+            if(i == 4 || i == 9 || i == 14){
+                slotX = slotXstart;
+                slotY += panel.tileSize;
+            }
+        }
+
+        // CURSOR
+        int cursorX = slotXstart + (panel.tileSize*slotCol);
+        int cursorY = slotYstart + (panel.tileSize*slotRow);
+        int cursorWidth = panel.tileSize;
+        int cursorHeight = panel.tileSize;
+
+        // DRAW CURSOR
+        graphics2D.setColor(Color.WHITE);
+        graphics2D.setStroke(new BasicStroke(3));   // make cursor not that thick
+        graphics2D.drawRoundRect(cursorX, cursorY, cursorWidth, cursorHeight, 10, 10);
+
+
+        // DESCRIPTION WINDOW
+        final int descriptionWindowX = characterWindowX;
+        final int descriptionWindowY = characterWindowY + characterWindowHeight + panel.tileSize/2;
+        final int descriptionWindowWidth = characterWindowWidth;
+        final int descriptionWindowHeight = panel.tileSize*3;
+        Window(descriptionWindowX, descriptionWindowY, descriptionWindowWidth, descriptionWindowHeight);
+
+        //DRAW DESCRIPTION TEXT
+        int textX = descriptionWindowX + panel.tileSize/2;
+        int textY = descriptionWindowY + panel.tileSize;
+        graphics2D.setFont(graphics2D.getFont().deriveFont(20F));
+
+        int itemIndex = getItemIndexOnSlot();
+
+        if(itemIndex < panel.player.Inventory.size()) {
+            for(String line: panel.player.Inventory.get(itemIndex).description.split("\n")) {
+                graphics2D.drawString(line, textX, textY);
+                textY += 32;;
+            }
+        }
+    }
+
+    public int getItemIndexOnSlot() {
+        return slotCol + slotRow*5;
     }
 
     // MAP TRANSITION

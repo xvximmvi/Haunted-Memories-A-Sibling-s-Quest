@@ -3,11 +3,15 @@ package entity;
 import main.GamePanel;
 import main.Handler;
 import main.Utility;
+import object.General.GENERAL_Card_2;
+import object.Hospital.HOSPITAL_Medication;
+import object.Hospital.HOSPITAL_Scalpel;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Player  extends Entity {
@@ -17,16 +21,10 @@ public class Player  extends Entity {
     int InteractionCounter=0;           //InteractionCounter: slower interaction with objects
     int ObjectCounter = 0;
 
-    // CHARACTER ATTRIBUTES
-    public int FullCompletion = 56;
-    Boolean[] complete = new Boolean[FullCompletion+1];
-
-    public final String CharacterName = "Simba Yamamoto";
-    public final String CharacterAge = "10";
-    public final String Level = "1";
-    public final String Location1 = "Hospital";
 
 
+    public ArrayList<Entity> Inventory = new ArrayList<>();
+    public final int InventorySize = 20;
 
     // PLAYER CONSTRUCTOR
     public Player(GamePanel gamePanel, Handler handler) {
@@ -51,6 +49,7 @@ public class Player  extends Entity {
 
         setDefaultValues();     //call setDefaultValues()
         playerImage();              //call playerImage()
+        setItems();
     }
 
     public void setDefaultValues() {
@@ -59,6 +58,13 @@ public class Player  extends Entity {
 
         Speed = 5;
         direction = "DOWN";
+    }
+
+    public void setItems() {
+        Inventory.add(new HOSPITAL_Medication(gamePanel));
+        Inventory.add(new HOSPITAL_Scalpel(gamePanel));
+        Inventory.add(new GENERAL_Card_2(gamePanel));
+
     }
 
     // PLAYER IMAGES
@@ -158,8 +164,15 @@ public class Player  extends Entity {
                                         //gamePanel.playSoundEffect(4);
                                         switchMap(0, 20, 10, "DOWN");
                                     } else {
-                                        switchMap(3, 24, 16, "LEFT");
+                                        switchMap(3, 24, 17, "LEFT");
                                     }
+                                }
+                            }
+                        }
+                        case 3 -> {
+                            switch (ObjectName) {
+                                case "Door_Left" -> {
+                                    switchMap(1, 2, 16, "RIGHT");
                                 }
                             }
                         }

@@ -11,6 +11,8 @@ public class GENERAL_Card_2 extends Entity {
         name = "Card_2";
         ObjectWidth = 29*2+14;
         ObjectHeight = 22*2+11;
+        description = "[Key Card]\nA security token that grants\nyou access through\nelectrically-powered doors.";
+
 
         Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
         DOWN1 = setup("/Objects/General/" + name + ".png", ObjectWidth, ObjectHeight);

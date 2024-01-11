@@ -32,16 +32,28 @@ public class Entity {
 
     public int actionCounter = 0;
 
-    // DIALOGUES
+    // DIALOGUES ATTRIBUTES
     String[] dialogues = new String[20];
     int dialogueIndex = 0;
 
-    // OBJECTS
+    // OBJECTS ATTRIBUTES
     public BufferedImage image;
     public String name;
     public int ObjectWidth;
     public int ObjectHeight;
     public boolean collision = false;
+
+    // ITEM ATTRIBUTES
+    public String description = "";
+
+    // CHARACTER ATTRIBUTES
+    public int FullCompletion = 56;
+    Boolean[] complete = new Boolean[FullCompletion+1];
+
+    public final String CharacterName = "Simba Yamamoto";
+    public final String CharacterAge = "10";
+    public final String Level = "1";
+    public final String Location1 = "Hospital";
 
 
     public Entity(GamePanel gamePanel) {

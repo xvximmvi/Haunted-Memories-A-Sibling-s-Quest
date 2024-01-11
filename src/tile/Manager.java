@@ -17,7 +17,6 @@ public class Manager {
     public Tile[] tile;             //use tiles  (public for CollisionDetection)
     public int[][][] mapTilesNum;     //which tile to use  (public for CollisionDetection)
 
-
     // MANAGER CONSTRUCTOR
     public Manager(GamePanel panel) {
         this.panel = panel;
@@ -157,7 +156,6 @@ public class Manager {
 
         while(MapCol < panel.maxMapCol && MapRow < panel.maxMapRow)  //instead of writing every tile
         {
-
             int tileNum = mapTilesNum[panel.currentMap][MapCol][MapRow];        //Draw number of each read Map-Matrix
 
             // PLAYER ALWAYS AT CENTER OF SCREEN
@@ -166,7 +164,6 @@ public class Manager {
             int MapY = MapRow*panel.tileSize;
             int ScreenX = MapX - panel.player.MapX + panel.player.ScreenX; //coordinates to get to a specific tile; compared to the player where is the tile
             int ScreenY = MapY - panel.player.MapY + panel.player.ScreenY;
-
 
             // STOP CAMERA AT EDGE
             //Left Side / Top Side
