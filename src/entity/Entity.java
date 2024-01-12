@@ -9,6 +9,30 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
+//TODO: Add new Object-Classes to the /src/Object/ directory.
+// 1.   The Name of the image should be unique and understandable e.g. Chair that faces Left = "Chair_L"
+// 1.1  Names usually used: Direction: Left = "_L", Right = "_R", Up = "_B", Down = "_F";
+// 2.   Add image to the designated resource folder in "/resource/Objects/" e.g. "/Objects/Hospital/" for hospital objects/Items
+// 3.   Copy an already existing Object-Class and Type the name of the Class:
+// 3.1  Add the name of the Location/Directory before the Class-name of the Object like e.g. "HOSPITAL_Chair_L" for hospital objects.
+// 3.2  The name of the objects (the "name" String in the Class) should be the same as the name of the image file. (because of setup()-Methode)
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------
+//TODO: Add new NPC-Classes to the /src/Entity/ directory.
+// 1.   The Name of the image should be unique and understandable e.g Female Doctor/Nurse Nr.1 = "Doctor_Female_1"
+// 1.1  Image name need 4 direction with 3 images per direction!
+// 1.2  1st image "_1":  right foot front (NPCs view); 2nd image "_2":  both feet in the middle; 3rd image "_3": left foot (NPCs view)
+// 1.3  Names usually used: Direction: Left = "_Left", Right = "_Right", Up = "_Back", Down = "_Front";
+// 1.4  Names should be e.g. (NPC = Female Doctor; Direction = going up; Image = 3) --> "Doctor_Female_1_Back_3"
+// 2.   Add image to the designated resource folder in "/resource/NPC/" e.g. "/NPC/Hospital/" for hospital NPCs
+// 3.   Copy an already existing NPC-Class and Type the name of the Class:
+// 3.1  Add the kind of Entity before the Class-name of the NPC like e.g. "NPC_Chair_L" for normal NPC.
+// 3.2  The name of the NPC (the "name" String in the Class) should be the same as the name of the image file without the directions. (because of setup()-Methode)
+// 3.3  e.g. name = "Doctor_Female_1"
+// 4.   Add Dialogues in the Dialogues()-Methode:
+// 4.1  Principle should stay the same! Start with:     int i = 0;
+// 4.2  Continue to add dialogues like this:            dialogues[i] = "---TEXT---";     i++;
+// 4.3  Maximum Dialogues that each NPC can have is 20. If more are needed just change the Dialogue-Attributes in the Entity-Class (from 20 to any number needed)
+
 // ABSTRACT CLASS
 public class Entity {
 

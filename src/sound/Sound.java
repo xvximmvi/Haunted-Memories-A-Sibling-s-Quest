@@ -28,7 +28,9 @@ public class Sound {
 
     // SOUND FILES
     public Sound(){
-        //sound[0] = getClass().getResource("/Sound/MELODY.wav");
+        //TODO: Add music files to "/Sound/Music/" Directory. Save as Wave-file.
+        // Add new directory for to systemize files for better structure and fast search
+        //sound[0] = getClass().getResource("/Sound/Music/MELODY.wav");
     }
 
     // OPEN FILE

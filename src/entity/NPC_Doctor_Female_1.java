@@ -10,6 +10,7 @@ public class NPC_Doctor_Female_1 extends Entity{
     public NPC_Doctor_Female_1(GamePanel gamePanel) {
         super(gamePanel);
 
+        name = "Doctor_Female_1";
         direction = "DOWN";
         Speed = 1;
 
@@ -29,21 +30,21 @@ public class NPC_Doctor_Female_1 extends Entity{
 
     // PLAYER IMAGES
     public void NPCImage(){
-        UP1 = setup("/NPC/Hospital/Doctor_Female_1/Doctor_Female_1_Back_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
-        UP2 = setup("/NPC/Hospital/Doctor_Female_1/Doctor_Female_1_Back_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
-        UP3 = setup("/NPC/Hospital/Doctor_Female_1/Doctor_Female_1_Back_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        UP1 = setup("/NPC/Hospital/"+name+"/"+name+"_Back_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        UP2 = setup("/NPC/Hospital/"+name+"/"+name+"_Back_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        UP3 = setup("/NPC/Hospital/"+name+"/"+name+"_Back_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
 
-        DOWN1 = setup("/NPC/Hospital/Doctor_Female_1/Doctor_Female_1_Front_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
-        DOWN2 = setup("/NPC/Hospital/Doctor_Female_1/Doctor_Female_1_Front_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
-        DOWN3 = setup("/NPC/Hospital/Doctor_Female_1/Doctor_Female_1_Front_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        DOWN1 = setup("/NPC/Hospital/"+name+"/"+name+"_Front_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        DOWN2 = setup("/NPC/Hospital/"+name+"/"+name+"_Front_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        DOWN3 = setup("/NPC/Hospital/"+name+"/"+name+"_Front_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
 
-        LEFT1 = setup("/NPC/Hospital/Doctor_Female_1/Doctor_Female_1_Left_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
-        LEFT2 = setup("/NPC/Hospital/Doctor_Female_1/Doctor_Female_1_Left_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
-        LEFT3 = setup("/NPC/Hospital/Doctor_Female_1/Doctor_Female_1_Left_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        LEFT1 = setup("/NPC/Hospital/"+name+"/"+name+"_Left_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        LEFT2 = setup("/NPC/Hospital/"+name+"/"+name+"_Left_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        LEFT3 = setup("/NPC/Hospital/"+name+"/"+name+"_Left_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
 
-        RIGHT1 = setup("/NPC/Hospital/Doctor_Female_1/Doctor_Female_1_Right_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
-        RIGHT2 = setup("/NPC/Hospital/Doctor_Female_1/Doctor_Female_1_Right_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
-        RIGHT3 = setup("/NPC/Hospital/Doctor_Female_1/Doctor_Female_1_Right_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        RIGHT1 = setup("/NPC/Hospital/"+name+"/"+name+"_Right_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        RIGHT2 = setup("/NPC/Hospital/"+name+"/"+name+"_Right_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        RIGHT3 = setup("/NPC/Hospital/"+name+"/"+name+"_Right_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
     }
 
     // NPC DIALOGUES

@@ -93,6 +93,9 @@ public class Manager {
         setup(53, "/Hospital/Wall_WhiteBlue_M", true);
         setup(54, "/Hospital/Wall_WhiteWhite_T", true);
         setup(55, "/Hospital/Outline_BL2", true);
+
+        //TODO: Add new tiles for different locations. All tiles should have 1:1 ratio.
+        // Add Tiles to each designated directory (e.g. "/School/" for School, "/City/ for city, "/Arcade/" for arcade)
     }
 
     // TILE IMAGE SETUP

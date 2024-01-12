@@ -24,7 +24,9 @@ public class SoundEffect {
 
     // SOUND FILES
     public SoundEffect(){
-        //soundEffect[0] = getClass().getResource("/Sound/SOUND.wav");
+        //TODO: Add music files to "/Sound/SoundFX/" Directory. Save as Wave-file.
+        // Add new directory for to systemize files for better structure and fast search
+        //soundEffect[0] = getClass().getResource("/Sound/SoundFX/SOUND.wav");
     }
 
     // OPEN FILE
