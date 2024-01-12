@@ -12,7 +12,13 @@ public class GENERAL_Plant_Long_3 extends Entity {
         ObjectWidth = 47*3+23;
         ObjectHeight = 91*3+45;
 
-        Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+        Area.width = ObjectWidth;
+        Area.height = ObjectHeight/2+65;
+        Area.x = 0;
+        Area.y = ObjectHeight-Area.height;
+        AreaDefaultX = Area.x;
+        AreaDefaultY = Area.y;
+        //Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
         DOWN1 = setup("/Objects/General/" + name + ".png", ObjectWidth, ObjectHeight);
 
         collision = true;

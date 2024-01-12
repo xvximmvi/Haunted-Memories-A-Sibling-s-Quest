@@ -171,6 +171,9 @@ public class GamePanel extends JPanel implements Runnable{
             manager.draw(graphics2d);   //draw manager tiles
 
             // ADD ENTITIES TO THE LIST
+                for(int i = 0; i < object[1].length; i++)
+                    if(object[currentMap][i] != null && !object[currentMap][i].collision)
+                        object[currentMap][i].draw(graphics2d);
 
             // PLAYER
             entityList.add(player);
@@ -182,7 +185,7 @@ public class GamePanel extends JPanel implements Runnable{
 
             // OBJECT
             for(int i = 0; i < object[1].length; i++)
-                if(object[currentMap][i] != null)
+                if(object[currentMap][i] != null && object[currentMap][i].collision)
                     entityList.add(object[currentMap][i]);
 
             // SORT

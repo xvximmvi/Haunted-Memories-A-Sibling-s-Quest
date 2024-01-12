@@ -26,7 +26,8 @@ public class Entity {
     public int spriteNum = 2;       //number of sprite
 
     // COLLISION
-    public Rectangle Area = new Rectangle(0, 44, 84, 100);          //Collision Area
+    public Rectangle Area = new Rectangle();          //Collision Area
+
     public int AreaDefaultX, AreaDefaultY;
     public boolean collisionOn = false;
 

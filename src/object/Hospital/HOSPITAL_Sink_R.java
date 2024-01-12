@@ -13,7 +13,13 @@ public class HOSPITAL_Sink_R extends Entity {
         ObjectWidth = 30*2+15;
         ObjectHeight = 126*2+63;
 
-        Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+        Area.width = ObjectWidth;
+        Area.height = ObjectHeight-45;
+        Area.x = 0;
+        Area.y = ObjectHeight-Area.height;
+        AreaDefaultX = Area.x;
+        AreaDefaultY = Area.y;
+        //Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
         DOWN1 = setup("/Objects/Hospital/" + name + ".png", ObjectWidth, ObjectHeight);
 
         collision = true;

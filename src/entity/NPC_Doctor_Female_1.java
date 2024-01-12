@@ -15,7 +15,13 @@ public class NPC_Doctor_Female_1 extends Entity{
 
         ObjectWidth = gamePanel.tileSize+12;
         ObjectHeight = gamePanel.tileSize*2;
-        Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+
+        Area.width = ObjectWidth;
+        Area.height = ObjectHeight/2-ObjectHeight/9;
+        Area.x = 0;
+        Area.y = ObjectHeight-Area.height;
+        AreaDefaultX = Area.x;
+        AreaDefaultY = Area.y;
 
         NPCImage();
         Dialogues();

@@ -13,7 +13,14 @@ public class HOSPITAL_Chair_R extends Entity {
         ObjectWidth = 24*2+12;
         ObjectHeight = 42*2+21;
 
-        Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+        Area.width = ObjectWidth;
+        Area.height = ObjectHeight/2+10;
+        Area.x = 0;
+        Area.y = ObjectHeight-Area.height;
+        AreaDefaultX = Area.x;
+        AreaDefaultY = Area.y;
+
+        //Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
         DOWN1 = setup("/Objects/Hospital/" + name + ".png", ObjectWidth, ObjectHeight);
 
         collision = true;
