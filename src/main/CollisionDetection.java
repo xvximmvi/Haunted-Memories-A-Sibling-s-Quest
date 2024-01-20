@@ -17,6 +17,18 @@ package main;
         - get entity's and object's collision area position
         - Check if Entity (Player/NPC) and Object are touching (Intersection)
         - Return Index (if Player is Colliding) - if NPC we just stop it from moving there
+
+    NPC DETECTION
+        - Set index
+        - Scan current object's area
+        - get entity's and target's collision area position
+        - Check if NPC is touching anything
+        - Return Index
+
+    PLAYER DETECTION
+        - Find Coordinates of Collision Area
+        - Check if Player and NPC Area collide
+        - CollisionOn -> used in NPC Class
  */
 
 import entity.Entity;
@@ -174,6 +186,7 @@ public class CollisionDetection {
                 target[panel.currentMap][i].Area.x = target[panel.currentMap][i].MapX + target[panel.currentMap][i].Area.x; //no need for coordinates like in TileDetection
                 target[panel.currentMap][i].Area.y = target[panel.currentMap][i].MapY + target[panel.currentMap][i].Area.y;
 
+
                 switch (entity.direction) {
                     case "UP" -> {
                         entity.Area.y -= entity.Speed;      //when going UP -> Y-Coordinate - Speed (4 px)
@@ -219,6 +232,8 @@ public class CollisionDetection {
 
     // PLAYER DETECTION
     public void DetectPlayer(Entity entity) {
+        // Detect if NPC is colliding with NPC
+
         //get entity's collision area position
         entity.Area.x = entity.MapX + entity.Area.x;
         entity.Area.y = entity.MapY + entity.Area.y;
@@ -227,24 +242,62 @@ public class CollisionDetection {
         panel.player.Area.x = panel.player.MapX + panel.player.Area.x; //no need for coordinates like in TileDetection
         panel.player.Area.y = panel.player.MapY + panel.player.Area.y;
 
+        int touchDamage = 2;
         switch (entity.direction) {
             case "UP" -> {
                 entity.Area.y -= entity.Speed;      //when going UP -> Y-Coordinate - Speed (4 px)
-
                 //automatically checks if entity.Area & panel.player.Area have intersection
-                if (entity.Area.intersects(panel.player.Area))  entity.collisionOn = true;  //A intersection B -> then collision is happening
+                if (entity.Area.intersects(panel.player.Area)) {
+                    if(entity.Boss) {   // If Entity is the Boss, damage Player
+                        entity.collisionPlayer = true;
+                        if(entity.Attack)  entity.damagePlayer(entity.attack);
+                        else {
+                            entity.damagePlayer(touchDamage); // If Entity is the Boss, damage Player
+                        }
+                    }
+                    entity.collisionOn = true;  //A intersection B -> then collision is happening
+                }
             }
             case "DOWN" -> {
                 entity.Area.y += entity.Speed;
-                if (entity.Area.intersects(panel.player.Area))  entity.collisionOn = true;
+                if (entity.Area.intersects(panel.player.Area)){
+                    if(entity.Boss) {   // If Entity is the Boss, damage Player
+                        entity.collisionPlayer = true;
+                        if(entity.Attack)  entity.damagePlayer(entity.attack);
+                        else {
+                            //entity.AttackingDetection(30, panel.tileSize*4, panel.tileSize);
+                            entity.damagePlayer(touchDamage); // If Entity is the Boss, damage Player
+                        }                    }
+
+                    entity.collisionOn = true;
+                }
             }
             case "LEFT" -> {
                 entity.Area.x -= entity.Speed;
-                if (entity.Area.intersects(panel.player.Area))  entity.collisionOn = true;
+                if (entity.Area.intersects(panel.player.Area)) {
+                    if(entity.Boss) {   // If Entity is the Boss, damage Player
+                        entity.collisionPlayer = true;
+                        if(entity.Attack)  entity.damagePlayer(entity.attack);
+                        else {
+                            //entity.AttackingDetection(30, panel.tileSize*4, panel.tileSize);
+                            entity.damagePlayer(touchDamage); // If Entity is the Boss, damage Player
+                        }
+                    }
+                    entity.collisionOn = true;
+                }
             }
             case "RIGHT" -> {
                 entity.Area.x += entity.Speed;
-                if (entity.Area.intersects(panel.player.Area))  entity.collisionOn = true;
+                if (entity.Area.intersects(panel.player.Area)){
+                    if(entity.Boss) {   // If Entity is the Boss, damage Player
+                        entity.collisionPlayer = true;
+                        if(entity.Attack)  entity.damagePlayer(entity.attack);
+                        else {
+                            //entity.AttackingDetection(30, panel.tileSize*4, panel.tileSize);
+                            entity.damagePlayer(touchDamage); // If Entity is the Boss, damage Player
+                        }                    }
+                    entity.collisionOn = true;
+                }
             }
         }
 
@@ -253,5 +306,6 @@ public class CollisionDetection {
         entity.Area.y = entity.AreaDefaultY;
         panel.player.Area.x = panel.player.AreaDefaultX;
         panel.player.Area.y = panel.player.AreaDefaultY;
+
     }
 }

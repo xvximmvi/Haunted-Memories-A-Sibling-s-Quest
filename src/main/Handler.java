@@ -1,7 +1,5 @@
 package main;
 
-import main.GamePanel;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -50,7 +48,7 @@ import java.awt.event.KeyListener;
 public class Handler implements KeyListener {
     GamePanel panel;
 
-    public boolean UP, DOWN, LEFT, RIGHT, INTERACT;   //Move direction
+    public boolean UP, DOWN, LEFT, RIGHT, INTERACT, ATTACK, DEFENSE;   //Move direction
     public boolean drawTime = false;
     public boolean Reset = false;
     public boolean Enter = false;
@@ -91,7 +89,6 @@ public class Handler implements KeyListener {
                     //panel.playMusic(1);
                     panel.GameState = panel.playState;
                     Reset = true;
-                    panel.ui.command=0;
                 }
                 if (panel.ui.command == 1) {
                     //panel.playSoundEffect(5);
@@ -157,6 +154,12 @@ public class Handler implements KeyListener {
 
             // INTERACTION
             if (keyCode == KeyEvent.VK_E) INTERACT = true;    //Key for interaction (objects, ...)
+
+            // ATTACK
+            if (keyCode == KeyEvent.VK_J) ATTACK = true;
+
+            // DEFENSE
+            if (keyCode == KeyEvent.VK_K) DEFENSE = true;
 
             // PAUSE/PLAY
             if (keyCode == KeyEvent.VK_P) {
@@ -402,5 +405,8 @@ public class Handler implements KeyListener {
 
         // INTERACTION
         if(keyCode == KeyEvent.VK_E)    INTERACT = false; //Key for interaction (objects, ...)
+
+        // DEFENSE
+        if (keyCode == KeyEvent.VK_K) DEFENSE = false;
     }
 }

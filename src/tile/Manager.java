@@ -5,7 +5,6 @@ import main.Utility;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,9 +12,10 @@ import java.io.InputStreamReader;
 import java.util.Objects;
 
 public class Manager {
-    GamePanel panel;                //draw the panel
-    public Tile[] tile;             //use tiles  (public for CollisionDetection)
-    public int[][][] mapTilesNum;     //which tile to use  (public for CollisionDetection)
+    GamePanel panel;                // draw the panel
+    public Tile[] tile;             // use tiles  (public for CollisionDetection)
+    public int[][][] mapTilesNum;   // which tile to use  (public for CollisionDetection)
+    boolean drawPath = false;       // Debug
 
     // MANAGER CONSTRUCTOR
     public Manager(GamePanel panel) {
@@ -103,7 +103,6 @@ public class Manager {
         //scale image so that Graphics2D doesn't have to do it and can draw faster
         // Edited afterward due to space redundancy in code
         Utility utility = new Utility();
-        BufferedImage image = null;
 
         try {
             tile[index] = new Tile();   // Create new Tile
@@ -199,6 +198,19 @@ public class Manager {
             if(MapCol == panel.maxMapCol){   //if col finished go to next row and repeat
                 MapCol = 0;         //reset MapCol
                 MapRow++;           //go to next Row
+            }
+        }
+
+        if(drawPath) {
+            graphics2D.setColor(new Color(255, 0, 0, 70));
+
+            for(int i = 0; i < panel.pathFinder.pathList.size(); i++) {
+                int MapX = panel.pathFinder.pathList.get(i).col * panel.tileSize;
+                int MapY = panel.pathFinder.pathList.get(i).row * panel.tileSize;
+                int ScreenX = MapX - panel.player.MapX + panel.player.ScreenX; //coordinates to get to a specific tile; compared to the player where is the tile
+                int ScreenY = MapY - panel.player.MapY + panel.player.ScreenY;
+
+                graphics2D.fillRect(ScreenX, ScreenY, panel.tileSize, panel.tileSize);
             }
         }
     }

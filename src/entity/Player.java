@@ -2,15 +2,12 @@ package entity;
 
 import main.GamePanel;
 import main.Handler;
-import main.Utility;
 import object.General.GENERAL_Card_2;
 import object.Hospital.HOSPITAL_Medication;
 import object.Hospital.HOSPITAL_Scalpel;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -20,8 +17,7 @@ public class Player  extends Entity {
 
     int InteractionCounter=0;           //InteractionCounter: slower interaction with objects
     int ObjectCounter = 0;
-
-
+    int untouchableBlink = 0;
 
     public ArrayList<Entity> Inventory = new ArrayList<>();
     public final int InventorySize = 20;
@@ -47,17 +43,37 @@ public class Player  extends Entity {
         AreaDefaultX = Area.x;
         AreaDefaultY = Area.y;
 
+        AttackArea.width = gamePanel.tileSize;
+        AttackArea.height = gamePanel.tileSize;
+
+
         setDefaultValues();     //call setDefaultValues()
-        playerImage();              //call playerImage()
+
+        // CALL IMAGES
+        PlayerWalkingImage();
+        PlayerFightImage();
+        PlayerDeadImage();
+        PlayerBlockImage();
+
         setItems();
+        setDialogues();
     }
 
     public void setDefaultValues() {
         MapX = gamePanel.tileSize*13;       //Begin next to Simbas ICU Bed
         MapY = gamePanel.tileSize*18+24;
 
-        Speed = 5;
+        attack = 1;
+        defense = 0;
+        AttackSpeed = 10;
+
+        defaultSpeed = 5;
+        Speed = defaultSpeed;
         direction = "DOWN";
+
+        // PLAYER STATUS
+        maxLife = 10;
+        life = maxLife;
     }
 
     public void setItems() {
@@ -68,7 +84,7 @@ public class Player  extends Entity {
     }
 
     // PLAYER IMAGES
-    public void playerImage(){
+    public void PlayerWalkingImage(){
         UP1 = setup("/Simba/Walking/Simba_Back_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
         UP2 = setup("/Simba/Walking/Simba_Back_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
         UP3 = setup("/Simba/Walking/Simba_Back_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
@@ -85,57 +101,103 @@ public class Player  extends Entity {
         RIGHT2 = setup("/Simba/Walking/Simba_Right_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
         RIGHT3 = setup("/Simba/Walking/Simba_Right_3.png", gamePanel.tileSize, gamePanel.tileSize+24);
     }
+    public void PlayerFightImage(){
+        HIT_UP1 = setup("/Simba/Fight/Simba_Fight_Back_1.png", gamePanel.tileSize, gamePanel.tileSize+40);
+        HIT_UP2 = setup("/Simba/Fight/Simba_Fight_Back_2.png", gamePanel.tileSize, gamePanel.tileSize+40);
+
+        HIT_DOWN1 = setup("/Simba/Fight/Simba_Fight_Front_1.png", gamePanel.tileSize, gamePanel.tileSize+40);
+        HIT_DOWN2 = setup("/Simba/Fight/Simba_Fight_Front_2.png", gamePanel.tileSize, gamePanel.tileSize+40);
+
+        HIT_LEFT1 = setup("/Simba/Fight/Simba_Fight_Left_1.png", gamePanel.tileSize+40, gamePanel.tileSize+24);
+        HIT_LEFT2 = setup("/Simba/Fight/Simba_Fight_Left_2.png", gamePanel.tileSize+40, gamePanel.tileSize+24);
+
+        HIT_RIGHT1 = setup("/Simba/Fight/Simba_Fight_Right_1.png", gamePanel.tileSize+40, gamePanel.tileSize+24);
+        HIT_RIGHT2 = setup("/Simba/Fight/Simba_Fight_Right_2.png", gamePanel.tileSize+40, gamePanel.tileSize+24);
+    }
+    public void PlayerDeadImage(){
+        DEAD_1 = setup("/Simba/Dead/Simba_Dead_1.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        DEAD_2 = setup("/Simba/Dead/Simba_Dead_2.png", gamePanel.tileSize, gamePanel.tileSize+24);
+    }
+    public void PlayerBlockImage(){
+        BLOCK_UP = setup("/Simba/Block/Simba_Block_Back.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        BLOCK_DOWN = setup("/Simba/Block/Simba_Block_Front.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        BLOCK_LEFT = setup("/Simba/Block/Simba_Block_Left.png", gamePanel.tileSize, gamePanel.tileSize+24);
+        BLOCK_RIGHT = setup("/Simba/Block/Simba_Block_Right.png", gamePanel.tileSize, gamePanel.tileSize+24);
+
+    }
 
     // UPDATE PLAYER POSITION
     public void update() {
         //update current position of player
-
-        // PLAYER DIRECTION
-        if(handler.UP || handler.DOWN || handler.LEFT || handler.RIGHT){    //move if any key is pressed
-            if(handler.UP)      direction = "UP";   //if W (UP) is pressed (=true) -> change direction of position
-            if(handler.DOWN)    direction = "DOWN";
-            if(handler.LEFT)    direction = "LEFT";
-            if(handler.RIGHT)   direction = "RIGHT";
-
-
-            // COLLISION DETECTION -------------------------------------------------------------------------------------
-            collisionOn = false;    //Default as false
-
-            // CHECK TILE COLLISION
-            //player Class is a subclass of the Entity class
-            gamePanel.collisionDetection.DetectTile(this);  //CollisionDetection receives Player class as Entity
+        if(!Dead) {
+            // ATTACK
+            if (handler.ATTACK) {
+                attacking();
+                Attack = true;
+            }
+            if (handler.DEFENSE) defense = 2;
 
 
-            // CHECK OBJECT COLLISION
-            int objectIndex = gamePanel.collisionDetection.DetectObject(this, true);
-            InteractionObject(objectIndex);     //interaction with object
+            if (!handler.ATTACK && !handler.DEFENSE) {
+                defense = 0;
+                // PLAYER DIRECTION
+                if (handler.UP || handler.DOWN || handler.LEFT || handler.RIGHT) {    //move if any key is pressed
+                    if (handler.UP) direction = "UP";   //if W (UP) is pressed (=true) -> change direction of position
+                    if (handler.DOWN) direction = "DOWN";
+                    if (handler.LEFT) direction = "LEFT";
+                    if (handler.RIGHT) direction = "RIGHT";
 
-            // CHECK NPC COLLISION
-            int NPCIndex = gamePanel.collisionDetection.DetectEntity(this, gamePanel.NPC);
-            InteractionNPC(NPCIndex);
+
+                    // COLLISION DETECTION -------------------------------------------------------------------------------------
+                    collisionOn = false;    //Default as false
+
+                    // CHECK TILE COLLISION
+                    //player Class is a subclass of the Entity class
+                    gamePanel.collisionDetection.DetectTile(this);  //CollisionDetection receives Player class as Entity
 
 
-            // if Collision is false, Player can move
-            if(!collisionOn) {
-                switch (direction) {
-                    case "UP" -> MapY -= Speed;    //if W (going UP) is pressed -> Y-Coordinate changes (-Speed)
-                    case "DOWN" -> MapY += Speed;
-                    case "LEFT" -> MapX -= Speed;
-                    case "RIGHT" -> MapX += Speed;
+                    // CHECK OBJECT COLLISION
+                    int objectIndex = gamePanel.collisionDetection.DetectObject(this, true);
+                    InteractionObject(objectIndex);     //interaction with object
+
+                    // CHECK NPC COLLISION
+                    int NPCIndex = gamePanel.collisionDetection.DetectEntity(this, gamePanel.NPC);
+                    InteractionNPC(NPCIndex);
+                    contactBoss(NPCIndex);
+
+
+                    // if Collision is false, Player can move
+                    if (!collisionOn) {
+                        switch (direction) {
+                            case "UP" -> MapY -= Speed;    //if W (going UP) is pressed -> Y-Coordinate changes (-Speed)
+                            case "DOWN" -> MapY += Speed;
+                            case "LEFT" -> MapX -= Speed;
+                            case "RIGHT" -> MapX += Speed;
+                        }
+                    }
+
+                    spriteCounter++;                //continue counting
+                    if (spriteCounter > 10) {           //How fast to change (only change Sprite when number 12 has reached)
+                        if (spriteNum == 1) spriteNum = 2;
+                        else if (spriteNum == 2) spriteNum = 3;
+                        else if (spriteNum == 3) spriteNum = 4;
+                        else if (spriteNum == 4) spriteNum = 1;
+                        spriteCounter = 0;          //Reset spriteCounter
+                    }
+                } else spriteNum = 1;               //if He stops moving -> go to basic position (Standing Position 2)
+            }
+
+            // This needs to be outside of key if statement!
+            if (untouchable) {
+                untouchableCounter++;
+                if (untouchableCounter > 60) {
+                    untouchable = false;
+                    untouchableCounter = 0;
                 }
             }
-
-            spriteCounter++;                //continue counting
-            if(spriteCounter>10){           //How fast to change (only change Sprite when number 12 has reached)
-                if (spriteNum == 1)         spriteNum = 2;
-                else if (spriteNum == 2)    spriteNum = 3;
-                else if (spriteNum == 3)    spriteNum = 4;
-                else if (spriteNum == 4)    spriteNum = 1;
-                spriteCounter = 0;          //Reset spriteCounter
-            }
-        } else spriteNum = 1;               //if He stops moving -> go to basic position (Standing Position 2)
-
+        }
     }
+
 
     // OBJECT INTERACTION
     public void InteractionObject(int index) {
@@ -151,9 +213,14 @@ public class Player  extends Entity {
                     switch (gamePanel.currentMap) {
                         case 0 -> {
                             switch (ObjectName) {
-                                case "Door" -> {
+                                 case "Door" -> {
                                     //gamePanel.playSoundEffect(4);
                                     switchMap(1, 2, 25, "RIGHT");
+                                }
+                                case "Medication_Shelf_F" -> {
+                                    gamePanel.GameState = gamePanel.dialogueState;
+                                    gamePanel.ui.currentDialogue = dialogues[0];
+                                    pickUpObject(new HOSPITAL_Medication(gamePanel), 0);
                                 }
                             }
                         }
@@ -181,6 +248,23 @@ public class Player  extends Entity {
             }
         }
     }
+    public void pickUpObject(Entity object, int soundFX) {
+        if(Inventory.size() != InventorySize) {
+            Inventory.add(object);
+            //gamePanel.playSoundEffect(soundFX);
+        }
+    }
+    public void useObject(Entity object, int soundFX) {
+        Inventory.remove(object);
+        //gamePanel.playSoundEffect(soundFX);
+    }
+
+    public void setDialogues(){
+        int i = 0;
+
+        // ICU
+        dialogues[i]="Ah, yes!\nThe Anti-Depressions I need to finish this code.";
+    }
 
     // NPC INTERACTION
     public void InteractionNPC(int index) {
@@ -191,6 +275,43 @@ public class Player  extends Entity {
             }
         }
     }
+    public void contactBoss(int index) {
+        if(index != 999) {
+            if(gamePanel.NPC[gamePanel.currentMap][index].Boss) {
+                if (!untouchable) {
+                    if(gamePanel.NPC[gamePanel.currentMap][index].Attack)
+                        damagePlayer(gamePanel.NPC[gamePanel.currentMap][index].attack);
+                    else    gamePanel.NPC[gamePanel.currentMap][index].damagePlayer(2); // If Entity is the Boss, damage Player
+                }
+            }
+        }
+    }
+    public void damageEnemy(int index) {
+        if(index != 999) {
+            if (gamePanel.NPC[gamePanel.currentMap][index].Boss) {
+
+                //TODO: gamePanel.playSoundEffect(soundFX);
+
+                knockBack(gamePanel.NPC[gamePanel.currentMap][index]);
+
+                if (!gamePanel.NPC[gamePanel.currentMap][index].untouchable) {
+                    int damage = attack - gamePanel.NPC[gamePanel.currentMap][index].defense;
+
+                    if(damage < 0) damage = 0;
+
+                    gamePanel.NPC[gamePanel.currentMap][index].life -= damage;
+                    if(damage > 0) gamePanel.NPC[gamePanel.currentMap][index].untouchable = true;
+
+                    if (gamePanel.NPC[gamePanel.currentMap][index].life <= 0) {
+                        gamePanel.NPC[gamePanel.currentMap][index].Dead = true;
+                    }
+                }
+            } //else System.out.println("MISS!"); // DEBUG
+        }
+    }
+
+
+
 
     public void draw(Graphics2D graphics2d) {
         //draw object with current information
@@ -202,27 +323,60 @@ public class Player  extends Entity {
 
         // DRAW SPRITE IMAGE
         BufferedImage image = null;
-
-        switch (direction) {         //each possible direction
-            case "UP" -> {
-                if (spriteNum == 1 || spriteNum == 3) image = UP2;
-                if (spriteNum == 2) image = UP1;
-                if (spriteNum == 4) image = UP3;
-            }
-            case "DOWN" -> {
-                if (spriteNum == 1 || spriteNum == 3) image = DOWN2;
-                if (spriteNum == 2) image = DOWN1;
-                if (spriteNum == 4) image = DOWN3;
-            }
-            case "LEFT" -> {
-                if (spriteNum == 1 || spriteNum == 3) image = LEFT2;
-                if (spriteNum == 2) image = LEFT1;
-                if (spriteNum == 4) image = LEFT3;
-            }
-            case "RIGHT" -> {
-                if (spriteNum == 1 || spriteNum == 3) image = RIGHT2;
-                if (spriteNum == 2) image = RIGHT1;
-                if (spriteNum == 4) image = RIGHT3;
+        if(!Dead) {
+            switch (direction) {         //each possible direction
+                case "UP" -> {
+                    if (!handler.ATTACK && !handler.DEFENSE) {
+                        if (spriteNum == 1 || spriteNum == 3) drawImage = UP2;
+                        if (spriteNum == 2) drawImage = UP1;
+                        if (spriteNum == 4) drawImage = UP3;
+                    } else {
+                        if (handler.DEFENSE) drawImage = BLOCK_UP;
+                        else {
+                            if (spriteNum == 1) drawImage = HIT_UP1;
+                            if (spriteNum == 2) drawImage = HIT_UP2;
+                        }
+                    }
+                }
+                case "DOWN" -> {
+                    if (!handler.ATTACK && !handler.DEFENSE) {
+                        if (spriteNum == 1 || spriteNum == 3) drawImage = DOWN2;
+                        if (spriteNum == 2) drawImage = DOWN1;
+                        if (spriteNum == 4) drawImage = DOWN3;
+                    } else {
+                        if (handler.DEFENSE) drawImage = BLOCK_DOWN;
+                        else {
+                            if (spriteNum == 1) drawImage = HIT_DOWN1;
+                            if (spriteNum == 2) drawImage = HIT_DOWN2;
+                        }
+                    }
+                }
+                case "LEFT" -> {
+                    if (!handler.ATTACK && !handler.DEFENSE) {
+                        if (spriteNum == 1 || spriteNum == 3) drawImage = LEFT2;
+                        if (spriteNum == 2) drawImage = LEFT1;
+                        if (spriteNum == 4) drawImage = LEFT3;
+                    } else {
+                        if (handler.DEFENSE) drawImage = BLOCK_LEFT;
+                        else {
+                            if (spriteNum == 1) drawImage = HIT_LEFT1;
+                            if (spriteNum == 2) drawImage = HIT_LEFT2;
+                        }
+                    }
+                }
+                case "RIGHT" -> {
+                    if (!handler.ATTACK && !handler.DEFENSE) {
+                        if (spriteNum == 1 || spriteNum == 3) drawImage = RIGHT2;
+                        if (spriteNum == 2) drawImage = RIGHT1;
+                        if (spriteNum == 4) drawImage = RIGHT3;
+                    } else {
+                        if (handler.DEFENSE) drawImage = BLOCK_RIGHT;
+                        else {
+                            if (spriteNum == 1) drawImage = HIT_RIGHT1;
+                            if (spriteNum == 2) drawImage = HIT_RIGHT2;
+                        }
+                    }
+                }
             }
         }
 
@@ -246,8 +400,15 @@ public class Player  extends Entity {
         if(BottomOffset > gamePanel.MapHeight - MapY)
             y = gamePanel.ScreenHeight - (gamePanel.MapHeight - MapY);
 
+        if(untouchable) graphics2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+
+        if(Dead)   DeathAnimation(graphics2d);
+
+
         //ScreenX and ScreenY don't change
-        graphics2d.drawImage(image, x, y, null);    //null: image observer  +8 to make character bigger
+        graphics2d.drawImage(drawImage, x, y, null);    //null: image observer  +8 to make character bigger
+        graphics2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
     }
 
     // SWITCH ROOMS/MAPS
@@ -258,4 +419,6 @@ public class Player  extends Entity {
         gamePanel.TransitionDirection = direction;
         gamePanel.GameState = gamePanel.transitionState;
     }
+
+
 }

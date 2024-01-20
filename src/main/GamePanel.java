@@ -1,5 +1,6 @@
 package main;
 
+import ai.PathFinder;
 import entity.Entity;
 import entity.Player;
 import sound.Sound;
@@ -9,8 +10,6 @@ import tile.Manager;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -39,12 +38,13 @@ public class GamePanel extends JPanel implements Runnable{
 
     // SYSTEM
     Handler handler = new Handler(this);    //add Handler
-    Manager manager = new Manager(this);
+    public Manager manager = new Manager(this);
     Sound sound = new Sound();
     SoundEffect soundEffect = new SoundEffect();
     public CollisionDetection collisionDetection = new CollisionDetection(this);    //public for Player
     public SetAsset asset = new SetAsset(this);
     public UserInterface ui = new UserInterface(this);
+    public PathFinder pathFinder = new PathFinder(this);
     Thread thread;      //implements Runnable (in public class)
 
 
@@ -140,7 +140,8 @@ public class GamePanel extends JPanel implements Runnable{
             // NPC
             for(int i = 0; i < NPC[1].length; i++){
                 if(NPC[currentMap][i] != null) {
-                    NPC[currentMap][i].update();
+                    if(NPC[currentMap][i].Alive && !NPC[currentMap][i].Dead)    NPC[currentMap][i].update();
+                    if(!NPC[currentMap][i].Alive)   NPC[currentMap][i] = null;
                 }
             }
 
@@ -192,12 +193,7 @@ public class GamePanel extends JPanel implements Runnable{
                     entityList.add(object[currentMap][i]);
 
             // SORT
-            entityList.sort(new Comparator<Entity>() {
-                @Override
-                public int compare(Entity e1, Entity e2) {
-                    return Integer.compare(e1.MapY, e2.MapY);
-                }
-            });
+            entityList.sort(Comparator.comparingInt(e -> e.MapY));
 
             // DRAW ENTITIES
             for (Entity entity : entityList) entity.draw(graphics2d);

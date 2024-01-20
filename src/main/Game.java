@@ -34,7 +34,7 @@ public class Game {
 
     // SET ICON
     public void setIcon(){
-        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Icon.png")));
+        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Sound/Icon.png")));
         window.setIconImage(imageIcon.getImage());
     }
 }

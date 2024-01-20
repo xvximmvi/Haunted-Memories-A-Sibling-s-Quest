@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Random;
 
 //TODO: Add new Object-Classes to the /src/Object/ directory.
 // 1.   The Name of the image should be unique and understandable e.g. Chair that faces Left = "Chair_L"
@@ -41,44 +42,77 @@ public class Entity {
     // MAP COORDINATES
     public int MapX, MapY, Speed;
 
-    // PLAYER DIRECTION & IMAGES
+    // PLAYER DIRECTION & IMAGES --------------------------------------------------------------------------
     //BufferedImage: Image with an accessible buffer of image data (to store our image files)
     public BufferedImage UP1, UP2, UP3, DOWN1, DOWN2, DOWN3, LEFT1, LEFT2, LEFT3, RIGHT1, RIGHT2, RIGHT3;
+    public BufferedImage HIT_UP1, HIT_UP2, HIT_DOWN1, HIT_DOWN2, HIT_LEFT1, HIT_LEFT2, HIT_RIGHT1, HIT_RIGHT2;
+    public BufferedImage BLOCK_UP, BLOCK_DOWN, BLOCK_LEFT, BLOCK_RIGHT;
+    public BufferedImage DEAD_1, DEAD_2;
+
     public String direction = "DOWN";        //direction of character moving (Default Direction: Down)
 
     public int spriteCounter = 0;   //count up to change position
     public int spriteNum = 2;       //number of sprite
 
-    // COLLISION
+    BufferedImage drawImage = null;
+
+
+    // COLLISION ------------------------------------------------------------------------------------------
     public Rectangle Area = new Rectangle();          //Collision Area
 
     public int AreaDefaultX, AreaDefaultY;
+    public boolean collisionPlayer = false;
     public boolean collisionOn = false;
 
     public int actionCounter = 0;
 
-    // DIALOGUES ATTRIBUTES
+    public boolean untouchable = false;
+    public int untouchableCounter = 0;
+
+    // DIALOGUES ATTRIBUTES -------------------------------------------------------------------------------
     String[] dialogues = new String[20];
     int dialogueIndex = 0;
 
-    // OBJECTS ATTRIBUTES
-    public BufferedImage image;
+    // OBJECTS ATTRIBUTES ---------------------------------------------------------------------------------
     public String name;
     public int ObjectWidth;
     public int ObjectHeight;
+    public int DefaultWidth = ObjectWidth;
     public boolean collision = false;
 
-    // ITEM ATTRIBUTES
+    // ITEM ATTRIBUTES ------------------------------------------------------------------------------------
     public String description = "";
 
-    // CHARACTER ATTRIBUTES
+    // CHARACTER ATTRIBUTES -------------------------------------------------------------------------------
     public int FullCompletion = 56;
     Boolean[] complete = new Boolean[FullCompletion+1];
+    public int maxLife, life;
+    public int defaultSpeed;
+    public int attack, defense;
+    public boolean Boss = false;
+    public boolean Snitch = false;
+    public int AttackSpeed = 0;
+    public BufferedImage image, image2;
 
     public final String CharacterName = "Simba Yamamoto";
     public final String CharacterAge = "10";
     public final String Level = "1";
     public final String Location1 = "Hospital";
+
+    // STATE ----------------------------------------------------------------------------------------------
+    public Rectangle AttackArea = new Rectangle(0, 0, 0, 0);
+    public boolean Attack = false;
+    public boolean Defense = false;
+    public int DefenseCounter = 0;
+    public boolean Alive = true;
+    public boolean Dead = false;
+    public int DeathCounter = 0;
+    public boolean onPath = false;
+    public boolean knockBack = false;
+    int knockBackCounter = 0;
+    public boolean PlayerNPC = false;
+    public boolean NPCPlayer = false;
+    public boolean Opposite = false;
 
 
     public Entity(GamePanel gamePanel) {
@@ -117,39 +151,83 @@ public class Entity {
         }
     }
 
-    public void update(){
-        Action();
-
+    public void detectCollision() {
         collisionOn = false;
         gamePanel.collisionDetection.DetectTile(this);          // Pass this Class each NPC-Class as an Entity
         gamePanel.collisionDetection.DetectObject(this, false);
         gamePanel.collisionDetection.DetectPlayer(this);
 
+    }
 
-        // if Collision is false, Player can move
-        if(!collisionOn) {
-            switch (direction) {
-                case "UP" -> MapY -= Speed;    //if going UP -> Y-Coordinate changes (-Speed)
-                case "DOWN" -> MapY += Speed;
-                case "LEFT" -> MapX -= Speed;
-                case "RIGHT" -> MapX += Speed;
+    public void update(){
+
+        if(knockBack){
+            detectCollision();
+
+            if(collisionOn) {
+                knockBackCounter = 0;
+                knockBack = false;
+                Speed = defaultSpeed;
+            } else {
+                switch (gamePanel.player.direction) {
+                    case "UP" -> MapY -= Speed;
+                    case "DOWN" -> MapY += Speed;
+                    case "LEFT" -> MapX -= Speed;
+                    case "RIGHT" -> MapX += Speed;
+                }
+            }
+
+            knockBackCounter++;
+            if (knockBackCounter == 4) {
+                knockBackCounter = 0;
+                knockBack = false;
+                Speed = defaultSpeed;
             }
         }
 
-        spriteCounter++;                //continue counting
-        if(spriteCounter>10){           //How fast to change (only change Sprite when number 12 has reached)
-            if (spriteNum == 1)         spriteNum = 2;
-            else if (spriteNum == 2)    spriteNum = 3;
-            else if (spriteNum == 3)    spriteNum = 4;
-            else if (spriteNum == 4)    spriteNum = 1;
-            spriteCounter = 0;          //Reset spriteCounter
+        else if(Attack) attacking();
+        else if(Defense) defending();
+        else {
+            defense = 0;
+            Action();
+
+            AttackingDetection(30, gamePanel.tileSize*4, gamePanel.tileSize);
+
+            detectCollision();  // Detect all Collisions
+
+            // if Collision is false, Player can move
+            if (!collisionOn) {
+                switch (direction) {
+                    case "UP" -> MapY -= Speed;    //if going UP -> Y-Coordinate changes (-Speed)
+                    case "DOWN" -> MapY += Speed;
+                    case "LEFT" -> MapX -= Speed;
+                    case "RIGHT" -> MapX += Speed;
+                }
+            }
+
+            spriteCounter++;                //continue counting
+            if (spriteCounter > 10) {           //How fast to change (only change Sprite when number 12 has reached)
+                if (spriteNum == 1) spriteNum = 2;
+                else if (spriteNum == 2) spriteNum = 3;
+                else if (spriteNum == 3) spriteNum = 4;
+                else if (spriteNum == 4) spriteNum = 1;
+                spriteCounter = 0;          //Reset spriteCounter
+            }
+
+        }
+        // This needs to be outside of key if statement!
+        if (untouchable) {
+            untouchableCounter++;
+            if (untouchableCounter > 40) {
+                untouchable = false;
+                untouchableCounter = 0;
+            }
         }
     }
 
     // DRAW ENTITY
     public void draw(Graphics2D graphics2D) {
 
-        BufferedImage image = null;
         int screenX = MapX - gamePanel.player.MapX + gamePanel.player.ScreenX;
         int screenY = MapY - gamePanel.player.MapY + gamePanel.player.ScreenY;
 
@@ -169,30 +247,307 @@ public class Entity {
             screenY = gamePanel.ScreenHeight - (gamePanel.MapHeight - MapY);
         }
 
-        switch (direction) {         //each possible direction
-            case "UP" -> {
-                if (spriteNum == 1 || spriteNum == 3) image = UP2;
-                if (spriteNum == 2) image = UP1;
-                if (spriteNum == 4) image = UP3;
-            }
-            case "DOWN" -> {
-                if (spriteNum == 1 || spriteNum == 3) image = DOWN2;
-                if (spriteNum == 2) image = DOWN1;
-                if (spriteNum == 4) image = DOWN3;
-            }
-            case "LEFT" -> {
-                if (spriteNum == 1 || spriteNum == 3) image = LEFT2;
-                if (spriteNum == 2) image = LEFT1;
-                if (spriteNum == 4) image = LEFT3;
-            }
-            case "RIGHT" -> {
-                if (spriteNum == 1 || spriteNum == 3) image = RIGHT2;
-                if (spriteNum == 2) image = RIGHT1;
-                if (spriteNum == 4) image = RIGHT3;
+        if(!Dead) {
+            switch (direction) {         //each possible direction
+                case "UP" -> {
+                    if (!Attack && !Defense) {
+                        if (spriteNum == 1 || spriteNum == 3) drawImage = UP2;
+                        if (spriteNum == 2) drawImage = UP1;
+                        if (spriteNum == 4) drawImage = UP3;
+                    } else {
+                        if (Defense)    drawImage = BLOCK_UP;
+                        else {
+                            if (spriteNum == 1) drawImage = HIT_UP1;
+                            if (spriteNum == 2) drawImage = HIT_UP2;
+                        }
+                    }
+                }
+                case "DOWN" -> {
+                    if (!Attack && !Defense) {
+                        if (spriteNum == 1 || spriteNum == 3) drawImage = DOWN2;
+                        if (spriteNum == 2) drawImage = DOWN1;
+                        if (spriteNum == 4) drawImage = DOWN3;
+                    } else {
+                        if (Defense) drawImage = BLOCK_DOWN;
+                        else {
+                            if (spriteNum == 1) drawImage = HIT_DOWN1;
+                            if (spriteNum == 2) drawImage = HIT_DOWN2;
+                        }
+                    }
+                }
+                case "LEFT" -> {
+                    if (!Attack && !Defense) {
+                        if (spriteNum == 1 || spriteNum == 3) drawImage = LEFT2;
+                        if (spriteNum == 2) drawImage = LEFT1;
+                        if (spriteNum == 4) drawImage = LEFT3;
+                    } else {
+                        if (Defense) drawImage = BLOCK_LEFT;
+                        else {
+                            if (spriteNum == 1) drawImage = HIT_LEFT1;
+                            if (spriteNum == 2) drawImage = HIT_LEFT2;
+                        }
+                    }
+                }
+                case "RIGHT" -> {
+                    if (!Attack && !Defense) {
+                        if (spriteNum == 1 || spriteNum == 3) drawImage = RIGHT2;
+                        if (spriteNum == 2) drawImage = RIGHT1;
+                        if (spriteNum == 4) drawImage = RIGHT3;
+                    } else {
+                        if (Defense) drawImage = BLOCK_RIGHT;
+                        else {
+                            if (spriteNum == 1) drawImage = HIT_RIGHT1;
+                            if (spriteNum == 2) drawImage = HIT_RIGHT2;
+                        }
+                    }
+                }
             }
         }
 
-        graphics2D.drawImage(image, screenX, screenY, ObjectWidth, ObjectHeight, null);
+        if(untouchable) graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+
+        if(Dead)   DeathAnimation(graphics2D);
+
+        if(Attack && Boss && (Objects.equals(direction, "LEFT") || Objects.equals(direction, "RIGHT")))  graphics2D.drawImage(drawImage, screenX, screenY, ObjectWidth+40, ObjectHeight, null);
+        else graphics2D.drawImage(drawImage, screenX, screenY, ObjectWidth, ObjectHeight, null);
+
+        graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
     }
 
+    // ATTACK
+    public void attacking() {
+        spriteCounter++;
+        if (spriteCounter <= AttackSpeed)     spriteNum = 1;
+        else if (spriteCounter <= AttackSpeed*2) {
+            spriteNum = 2;
+
+            // Save the current MapX, MapY, Area
+            int currentMapX = MapX;
+            int currentMapY = MapY;
+            int AreaWidth = Area.width;
+            int AreaHeight = Area.height;
+
+            // Adjust Player's MapX/Y for the AttackArea
+            switch (direction) {
+                case "UP" -> MapY -= AttackArea.height;
+                case "DOWN" -> MapY += AttackArea.height;
+                case "LEFT" -> MapX -= AttackArea.width;
+                case "RIGHT" -> MapX += AttackArea.width;
+            }
+
+            // AttackArea becomes Area
+            Area.width = AttackArea.width;
+            Area.height = AttackArea.height;
+
+            /*if(Boss)
+                if(Attack)
+                    if(collisionPlayer)
+                        damagePlayer(attack);*/
+
+            if(!Boss) {
+                // Check Enemy/NPC collision with the updated MapX, MapY and Area
+                int EnemyIndex = gamePanel.collisionDetection.DetectEntity(this, gamePanel.NPC);
+                gamePanel.player.damageEnemy(EnemyIndex);
+            }
+
+            // After checking collision, restore the original data
+            MapX = currentMapX;
+            MapY = currentMapY;
+            Area.width = AreaWidth;
+            Area.height = AreaHeight;
+        }
+        else {
+            spriteNum = 1;
+            spriteCounter = 0;
+            if(Boss)    Attack = false;
+            else        gamePanel.player.handler.ATTACK = false;
+        }
+    }
+
+    public void defending() {
+        int addCounter = new Random().nextInt(5);
+        DefenseCounter += addCounter;
+
+        if(DefenseCounter < 100) {
+            defense = 3;
+        } else {
+            defense = 0;
+            DefenseCounter = 0;
+            Defense = false;
+        }
+    }
+
+
+    public void damagePlayer(int attack) {
+
+        if(!gamePanel.player.untouchable) {
+            // we can give damage
+            // SOUND FX
+           // knockBack(gamePanel.player);
+
+
+            int damage = attack - gamePanel.player.defense;
+            if(damage < 0) damage = 0;
+
+            gamePanel.player.life -= damage;
+            if(damage > 0) gamePanel.player.untouchable = true;
+
+            if(gamePanel.player.life <= 0)  gamePanel.player.Dead = true;
+        }
+    }
+
+    // FOLLOWING ENTITY
+    public int getXDistance(Entity target) {
+        return Math.abs(MapX - target.MapX);
+    }
+    public int getYDistance(Entity target) {
+        return Math.abs(MapY - target.MapY);
+    }
+    public int getTileDistance(Entity target) {
+        return getYDistance(target) + getYDistance(target);
+    }
+    public int getGoalCol(Entity target) {
+        return (target.MapX + target.Area.x) / gamePanel.tileSize;
+    }
+    public int getGoalRow(Entity target) {
+        return (target.MapY + target.Area.y) / gamePanel.tileSize;
+    }
+
+
+    public void AttackingDetection(int rate, int straight, int horizontal) {
+        boolean targetInRange = false;
+        int xDistance = getXDistance(gamePanel.player);
+        int yDistance = getYDistance(gamePanel.player);
+
+        switch(direction) {
+            case "UP" -> {
+                if(gamePanel.player.MapY < MapY && yDistance < straight && xDistance < horizontal) targetInRange = true;
+            }
+            case "DOWN" -> {
+                if(gamePanel.player.MapY > MapY && yDistance < straight && xDistance < horizontal) targetInRange = true;
+            }
+            case "LEFT" -> {
+                if(gamePanel.player.MapX < MapX && xDistance < straight && yDistance < horizontal) targetInRange = true;
+            }
+            case "RIGHT" -> {
+                if(gamePanel.player.MapX > MapX && xDistance < straight && yDistance < horizontal) targetInRange = true;
+            }
+        }
+
+        if(targetInRange) {
+            // Check if it initiates an attack
+            int i = new Random().nextInt(rate);
+            if(i == 1){
+                Attack = true;
+                spriteNum = 1;
+                spriteCounter = 0;
+            }
+            if(i == 2){
+                Defense = true;
+            }
+        } else {
+            Attack = false;
+            Defense = false;
+        }
+    }
+    public void DeathAnimation(Graphics2D graphics2D) {
+        DeathCounter++;
+        int i = 5;
+        if(DeathCounter <= i*4) {
+            changeAlpha(graphics2D, 1f);
+            drawImage = DEAD_1;
+        }
+        if(DeathCounter > i*4 && DeathCounter <= i*8) {
+            changeAlpha(graphics2D, 1f);
+            drawImage = DEAD_2;
+        }
+        if(DeathCounter > i*8 && DeathCounter >= i*9)   changeAlpha(graphics2D, 0f);
+        if(DeathCounter > i*10 && DeathCounter >= i*11) changeAlpha(graphics2D, 1f);
+        if(DeathCounter > i*12 && DeathCounter >= i*13) changeAlpha(graphics2D, 0f);
+        if(DeathCounter > i*14 && DeathCounter >= i*15) changeAlpha(graphics2D, 1f);
+        if(DeathCounter > i*16 && DeathCounter >= i*17) changeAlpha(graphics2D, 0f);
+        if(DeathCounter > i*18 && DeathCounter >= i*19) changeAlpha(graphics2D, 1f);
+        if(DeathCounter > i*19 && DeathCounter >= i*20) changeAlpha(graphics2D, 0f);
+        if(DeathCounter > i*20 && DeathCounter >= i*22) changeAlpha(graphics2D, 1f);
+        if(DeathCounter > i*22) {
+            Dead = false;
+            Alive = false;
+        }
+    }
+
+    public void knockBack(Entity entity) {
+        entity.direction = direction;
+        entity.Speed += 10;
+        entity.knockBack = true;
+    }
+
+    public void changeAlpha(Graphics2D graphics2D, float alpha) {
+        graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+    }
+
+    public void searchPath(int goalCol, int goalRow) {
+        int startCol = (MapX + Area.x) / gamePanel.tileSize;
+        int startRow = (MapY + Area.y) / gamePanel.tileSize;
+
+        gamePanel.pathFinder.setNodes(startCol, startRow, goalCol, goalRow, this);
+
+        if(gamePanel.pathFinder.search()) {
+            // Next MapX & MapY
+            int nextX = gamePanel.pathFinder.pathList.get(0).col * gamePanel.tileSize;
+            int nextY = gamePanel.pathFinder.pathList.get(0).row * gamePanel.tileSize;
+
+            // Entity's Area position
+            int entityLeftX = MapX + Area.x;
+            int entityRightX = MapX + Area.x + Area.width;
+            int entityTopY = MapY + Area.y;
+            int entityBottomY = MapY + Area.y + Area.height;
+
+            if(entityTopY > nextY && entityLeftX >= nextX && entityRightX < nextX + gamePanel.tileSize)
+                direction = "UP";
+
+            else if(entityTopY < nextY && entityLeftX >= nextX && entityRightX < nextX + gamePanel.tileSize)
+                direction = "DOWN";
+
+            else if(entityTopY >= nextY && entityBottomY < nextY + gamePanel.tileSize) {
+                // LEFT or RIGHT
+                if (entityLeftX > nextX) direction = "LEFT";
+                if (entityLeftX < nextX) direction = "RIGHT";
+            }
+
+            else if(entityTopY > nextY && entityLeftX > nextX) {
+                // UP or LEFT
+                direction = "UP";
+                detectCollision();
+                if(collisionOn)     direction = "LEFT";
+            }
+
+            else if(entityTopY > nextY && entityLeftX < nextX) {
+                // UP or RIGHT
+                direction = "UP";
+                detectCollision();
+                if(collisionOn)     direction = "RIGHT";
+            }
+
+            else if(entityTopY < nextY && entityLeftX > nextX) {
+                // DOWN or LEFT
+                direction = "DOWN";
+                detectCollision();
+                if(collisionOn)     direction = "LEFT";
+            }
+
+            else if(entityTopY < nextY && entityLeftX < nextX) {
+                // DOWN or RIGHT
+                direction = "DOWN";
+                detectCollision();
+                if(collisionOn)     direction = "RIGHT";
+            }
+
+            // If reaches the goal, stop the search
+            /*int nextCol = gamePanel.pathFinder.pathList.get(0).col;
+            int nextRow = gamePanel.pathFinder.pathList.get(0).row;
+
+            if(nextCol == goalCol && nextRow == goalRow)    onPath = false;*/
+        }
+    }
 }

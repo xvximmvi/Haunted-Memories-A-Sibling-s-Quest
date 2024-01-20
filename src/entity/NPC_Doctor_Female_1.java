@@ -2,7 +2,6 @@ package entity;
 
 import main.GamePanel;
 
-import java.awt.*;
 import java.util.Random;
 
 public class NPC_Doctor_Female_1 extends Entity{
@@ -13,6 +12,8 @@ public class NPC_Doctor_Female_1 extends Entity{
         name = "Doctor_Female_1";
         direction = "DOWN";
         Speed = 1;
+
+        life = 3;
 
         ObjectWidth = gamePanel.tileSize+12;
         ObjectHeight = gamePanel.tileSize*2;
@@ -53,7 +54,7 @@ public class NPC_Doctor_Female_1 extends Entity{
 
         dialogues[i] = "This fucking NPC took me 8 hours.";     i++;
         dialogues[i] = "It does nothing but walk and talk.";     i++;
-        dialogues[i] = "8 hours for walking and talking... \nStill I am so proud..";     i++;
+        dialogues[i] = "8 hours for walking and talking...\nStill I am so proud..";     i++;
         dialogues[i] = "Please kill me...";     i++;
         dialogues[i] = "I hate this game...";     i++;
         dialogues[i] = "I am going to kill Simba and myself when this game is done!\nI'm going to be a Real-Life Dieter A. Keller just you wait!";
@@ -62,9 +63,15 @@ public class NPC_Doctor_Female_1 extends Entity{
     // NPC ACTION
     public void Action() {
 
+        /*int goalCol = (gamePanel.player.MapX + gamePanel.player.Area.x) / gamePanel.tileSize;
+        int goalRow = (gamePanel.player.MapY + gamePanel.player.Area.y) / gamePanel.tileSize;
+
+        searchPath(goalCol, goalRow);*/
+
+
         actionCounter++;
 
-        if(actionCounter == 120) {
+        if (actionCounter == 120) {
             Random random = new Random();
             int i = random.nextInt(100) + 1;      //get random Number from 1 to 100 (added 1 because it picks from 0 to 99 (personal preference 1- 100)
 
@@ -75,12 +82,11 @@ public class NPC_Doctor_Female_1 extends Entity{
 
             actionCounter = 0;
         }
-
     }
 
     public void Speak() {
         // Do this character specific stuff
-
         super.Speak();
     }
+
 }

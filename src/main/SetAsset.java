@@ -4,8 +4,10 @@ package main;
 /*
     ASSET CONSTRUCTOR
     SET OBJECT for every Room
+    SET NPC for every Room
 */
 
+import entity.ArcadeEmployee;
 import entity.Entity;
 import entity.NPC_Doctor_Female_1;
 import object.General.*;
@@ -112,7 +114,6 @@ public class SetAsset {
     }
 
 
-
     // SET NPC ---------------------------------------------------------------------------------------------------------
     // SET NPC UTILITY
     public void setNPC(Entity entity, int MapX, int MapY, int MapIndex, int NPCIndex){
@@ -123,8 +124,9 @@ public class SetAsset {
         //second [] to know at which object we are
     }
 
-
+    //SET NPC
     public void setNPC_HOSPITAL_ICU() {
-        setNPC(new NPC_Doctor_Female_1(panel), panel.tileSize*12, panel.tileSize*12, 0,0 );
+        setNPC(new NPC_Doctor_Female_1(panel), panel.tileSize*4, panel.tileSize*5, 1,1 );
+        setNPC(new ArcadeEmployee(panel), panel.tileSize*12, panel.tileSize*12, 0,0);
     }
 }

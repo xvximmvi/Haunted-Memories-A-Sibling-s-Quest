@@ -1,5 +1,8 @@
 package main;
 
+import entity.Entity;
+import object.Attributes.Life;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -30,8 +33,8 @@ import java.text.DecimalFormat;
         - GAME OVER STATE
             > Game Over Screen
         - TRANSITION STATE
-            > Transition ON Screen
-            > Transition OFF Screen
+            > Transition ON-Screen
+            > Transition OFF-Screen
         - CHARACTER STATE
             > Character Screen
         - OPTION STATE
@@ -52,7 +55,6 @@ import java.text.DecimalFormat;
 public class UserInterface {
     GamePanel panel;
     Graphics2D graphics2D;
-    BufferedImage bufferedImage;
     Font Retro_Gaming;              // Imported Font
     public int command = 0;         // Choose Option
 
@@ -73,7 +75,7 @@ public class UserInterface {
     // PLAY TIME
     public boolean Timer = false;
     public double playTime=100;      //100 sec Countdown
-    public double DefaultPlayTime = playTime;
+    //public double DefaultPlayTime = playTime;
     DecimalFormat decimalFormat = new DecimalFormat("#0.00");  //minimize decimals
     DecimalFormat decimalForCharacter = new DecimalFormat("#0.0");  //minimize decimals
 
@@ -84,6 +86,8 @@ public class UserInterface {
     public int slotCol = 0;
     public int slotRow = 0;
 
+    // PLAYER LIFE
+    BufferedImage Life_Full, Life_Lost;
 
     // UI CONSTRUCTOR
     public UserInterface(GamePanel panel){
@@ -97,6 +101,11 @@ public class UserInterface {
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
+
+        // CREATE HUD OBJECT
+        Entity Life = new Life(panel);
+        Life_Full = Life.image;
+        Life_Lost = Life.image2;
     }
 
     // PRINT
@@ -176,15 +185,19 @@ public class UserInterface {
                     Goal = false;
                 }
             }
+
+            drawPlayerLife();
         }
 
         // PAUSE STATE  ------------------------------------------------------------------
         if(panel.GameState == panel.pauseState){
+            drawPlayerLife();
             PauseScreen();
         }
 
         // DIALOGUE STATE   ------------------------------------------------------------------
         if(panel.GameState == panel.dialogueState){
+            drawPlayerLife();
             DialogueWindow();
         }
 
@@ -238,8 +251,8 @@ public class UserInterface {
             InventoryScreen();
             CharacterScreen();
         }
-
     }
+
 
     // TILE SCREEN
     public void TitleScreen(){
@@ -419,7 +432,7 @@ public class UserInterface {
         graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 32F));
         Text = "Music";
         x = panel.tileSize*2;
-        y += panel.tileSize * 2.5;
+        y += (int) (panel.tileSize * 2.5);
         graphics2D.setColor(Color.GRAY);
         graphics2D.drawString(Text, x + 3, y + 3);
         graphics2D.setColor(Color.WHITE);
@@ -525,7 +538,7 @@ public class UserInterface {
         graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 32F));
         Text = "Move ";
         x = panel.tileSize * 2;
-        y += panel.tileSize * 2.5;
+        y += (int) (panel.tileSize * 2.5);
         graphics2D.setColor(Color.GRAY);
         graphics2D.drawString(Text, x + 3, y + 3);
         graphics2D.setColor(Color.WHITE);
@@ -711,6 +724,32 @@ public class UserInterface {
         graphics2D.drawString(text, x,y);
     }
 
+    // PLAYER LIFE
+    public void drawPlayerLife(){
+        int x = panel.tileSize/2;
+        int y = panel.tileSize/2;
+        int i = 0;
+
+        // DRAW BLANK LIFE (LOST LIFE)
+        while(i < panel.player.maxLife) {
+            graphics2D.drawImage(Life_Lost, x, y, null);
+            i++;
+            x += 28;
+        }
+
+        // RESET
+        x = panel.tileSize/2;
+        y = panel.tileSize/2;
+        i = 0;
+
+        // DRAW CURRENT LIFE
+        while (i < panel.player.life) {
+            graphics2D.drawImage(Life_Full, x, y, null);
+            i++;
+            x += 28;
+        }
+    }
+
     // PAUSE SCREEN
     public void PauseScreen(){
 
@@ -827,7 +866,6 @@ public class UserInterface {
 
         if(Timer) {     //Only show time if Timer is ON
             graphics2D.drawString("Time Left", textX, textY);
-            textY += lineHeight;
         }
 
 
@@ -864,7 +902,6 @@ public class UserInterface {
             Info = decimalForCharacter.format(playTime) + " s";
             InfoX = (characterWindowX + characterWindowWidth) - (int) graphics2D.getFontMetrics().getStringBounds(Info, graphics2D).getWidth() - 20;
             graphics2D.drawString(Info, InfoX, textY);
-            textY += lineHeight;
         }
     }
 
@@ -878,10 +915,10 @@ public class UserInterface {
         Window(characterWindowX, characterWindowY, characterWindowWidth, characterWindowHeight);
 
         // SLOT
-        final int slotXstart = characterWindowX + panel.tileSize/2;
-        final int slotYstart = characterWindowY + panel.tileSize/2;
-        int slotX = slotXstart;
-        int slotY = slotYstart;
+        final int slotXStart = characterWindowX + panel.tileSize/2;
+        final int slotYStart = characterWindowY + panel.tileSize/2;
+        int slotX = slotXStart;
+        int slotY = slotYStart;
 
         // DRAW PLAYER'S ITEMS
         for(int i = 0; i < panel.player.Inventory.size(); i++){
@@ -890,14 +927,14 @@ public class UserInterface {
             slotX += panel.tileSize;
 
             if(i == 4 || i == 9 || i == 14){
-                slotX = slotXstart;
+                slotX = slotXStart;
                 slotY += panel.tileSize;
             }
         }
 
         // CURSOR
-        int cursorX = slotXstart + (panel.tileSize*slotCol);
-        int cursorY = slotYstart + (panel.tileSize*slotRow);
+        int cursorX = slotXStart + (panel.tileSize*slotCol);
+        int cursorY = slotYStart + (panel.tileSize*slotRow);
         int cursorWidth = panel.tileSize;
         int cursorHeight = panel.tileSize;
 
@@ -908,23 +945,27 @@ public class UserInterface {
 
 
         // DESCRIPTION WINDOW
-        final int descriptionWindowX = characterWindowX;
         final int descriptionWindowY = characterWindowY + characterWindowHeight + panel.tileSize/2;
-        final int descriptionWindowWidth = characterWindowWidth;
         final int descriptionWindowHeight = panel.tileSize*3;
-        Window(descriptionWindowX, descriptionWindowY, descriptionWindowWidth, descriptionWindowHeight);
+        // Description Window should show always even when no Item is in the selected slot
+        //Window(characterWindowX, descriptionWindowY, characterWindowWidth, descriptionWindowHeight);
+
 
         //DRAW DESCRIPTION TEXT
-        int textX = descriptionWindowX + panel.tileSize/2;
+        int textX = characterWindowX + panel.tileSize/2;
         int textY = descriptionWindowY + panel.tileSize;
         graphics2D.setFont(graphics2D.getFont().deriveFont(20F));
 
         int itemIndex = getItemIndexOnSlot();
 
         if(itemIndex < panel.player.Inventory.size()) {
+
+            // Description Window should show ONLY when an Item is in the selected slot
+            Window(characterWindowX, descriptionWindowY, characterWindowWidth, descriptionWindowHeight);
+
             for(String line: panel.player.Inventory.get(itemIndex).description.split("\n")) {
                 graphics2D.drawString(line, textX, textY);
-                textY += 32;;
+                textY += 32;
             }
         }
     }
@@ -1292,8 +1333,9 @@ public class UserInterface {
             graphics2D.drawString(">",textX-20, textY);
             if(panel.handler.Enter){
                 panel.GameState = panel.titleState;
-                panel.stopMusic();
-                panel.playMusic(2);
+                //TODO: Add Main menu music
+                //panel.stopMusic();
+                //panel.playMusic(2);
             }
         }
 
@@ -1366,7 +1408,7 @@ public class UserInterface {
         graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 40F));
         Text = "PLAY AGAIN";
         x = CenterXText(Text);
-        y += panel.tileSize*2.5;
+        y += (int) (panel.tileSize*2.5);
         // SHADOW
         graphics2D.setColor(Color.BLACK);
         graphics2D.drawString(Text,x+3,y+3);
@@ -1452,7 +1494,7 @@ public class UserInterface {
         graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 40F));
         Text = "RETRY";
         x = CenterXText(Text);
-        y += panel.tileSize*4.5;
+        y += (int) (panel.tileSize*4.5);
         // SHADOW
         graphics2D.setColor(Color.BLACK);
         graphics2D.drawString(Text,x+3,y+3);
