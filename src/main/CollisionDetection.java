@@ -248,6 +248,13 @@ public class CollisionDetection {
                 entity.Area.y -= entity.Speed;      //when going UP -> Y-Coordinate - Speed (4 px)
                 //automatically checks if entity.Area & panel.player.Area have intersection
                 if (entity.Area.intersects(panel.player.Area)) {
+                    if(entity.Snitch){
+                       /* if(panel.player.done) {
+                            panel.GameState = panel.transitionState;
+                            panel.player.resetGame();
+                            panel.player.done = false;
+                        } else*/ panel.player.startDialogue(entity, entity.dialogueSet);
+                    }
                     if(entity.Boss) {   // If Entity is the Boss, damage Player
                         entity.collisionPlayer = true;
                         if(entity.Attack)  entity.damagePlayer(entity.attack);
@@ -261,6 +268,13 @@ public class CollisionDetection {
             case "DOWN" -> {
                 entity.Area.y += entity.Speed;
                 if (entity.Area.intersects(panel.player.Area)){
+                    if(entity.Snitch){
+                        /*if(panel.player.done) {
+                            panel.GameState = panel.transitionState;
+                            panel.player.resetGame();
+                            panel.player.done = false;
+                        } else */panel.player.startDialogue(entity, entity.dialogueSet);
+                    }
                     if(entity.Boss) {   // If Entity is the Boss, damage Player
                         entity.collisionPlayer = true;
                         if(entity.Attack)  entity.damagePlayer(entity.attack);
@@ -275,6 +289,13 @@ public class CollisionDetection {
             case "LEFT" -> {
                 entity.Area.x -= entity.Speed;
                 if (entity.Area.intersects(panel.player.Area)) {
+                    if(entity.Snitch){
+                       /* if(panel.player.done) {
+                            panel.GameState = panel.transitionState;
+                            panel.player.resetGame();
+                            panel.player.done = false;
+                        } else*/ panel.player.startDialogue(entity, entity.dialogueSet);
+                    }
                     if(entity.Boss) {   // If Entity is the Boss, damage Player
                         entity.collisionPlayer = true;
                         if(entity.Attack)  entity.damagePlayer(entity.attack);
@@ -289,6 +310,13 @@ public class CollisionDetection {
             case "RIGHT" -> {
                 entity.Area.x += entity.Speed;
                 if (entity.Area.intersects(panel.player.Area)){
+                    if(entity.Snitch){
+                       /* if(panel.player.done) {
+                            panel.GameState = panel.transitionState;
+                            panel.player.resetGame();
+                            panel.player.done = false;
+                        } else*/ panel.player.startDialogue(entity, entity.dialogueSet);
+                    }
                     if(entity.Boss) {   // If Entity is the Boss, damage Player
                         entity.collisionPlayer = true;
                         if(entity.Attack)  entity.damagePlayer(entity.attack);

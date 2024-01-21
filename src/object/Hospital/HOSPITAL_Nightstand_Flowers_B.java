@@ -6,6 +6,9 @@ import main.GamePanel;
 import java.awt.*;
 
 public class HOSPITAL_Nightstand_Flowers_B extends Entity {
+
+    GamePanel gamePanel;
+
     public HOSPITAL_Nightstand_Flowers_B(GamePanel gamePanel) {
         super(gamePanel);
         name = "Nightstand_Flowers_B";
@@ -18,9 +21,15 @@ public class HOSPITAL_Nightstand_Flowers_B extends Entity {
         Area.y = ObjectHeight-Area.height;
         AreaDefaultX = Area.x;
         AreaDefaultY = Area.y;
-        //Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
         DOWN1 = setup("/Objects/Hospital/" + name + ".png", ObjectWidth, ObjectHeight);
 
         collision = true;
+
+        setDialogue();
     }
+
+    public void setDialogue() {
+        dialogues[0][0] = "Seems like the nurse forgot to give him his meds today.\n Just look how sick he lies in his bed. Poor guy.";
+    }
+
 }

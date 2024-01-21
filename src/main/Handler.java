@@ -48,7 +48,7 @@ import java.awt.event.KeyListener;
 public class Handler implements KeyListener {
     GamePanel panel;
 
-    public boolean UP, DOWN, LEFT, RIGHT, INTERACT, ATTACK, DEFENSE;   //Move direction
+    public boolean UP, DOWN, LEFT, RIGHT, INTERACT, ATTACK, DEFENSE, E;   //Move direction
     public boolean drawTime = false;
     public boolean Reset = false;
     public boolean Enter = false;
@@ -87,8 +87,8 @@ public class Handler implements KeyListener {
                 if (panel.ui.command == 0) {
                     //panel.stopMusic();
                     //panel.playMusic(1);
+                    panel.player.resetGame();
                     panel.GameState = panel.playState;
-                    Reset = true;
                 }
                 if (panel.ui.command == 1) {
                     //panel.playSoundEffect(5);
@@ -129,8 +129,8 @@ public class Handler implements KeyListener {
                 //panel.playSoundEffect(5);
 
                 if(panel.ui.command == 0){
+                    panel.player.resetGame();
                     panel.GameState = panel.playState;
-                    Reset = true;
                 }
                 if(panel.ui.command == 1){
                     panel.GameState = panel.titleState;
@@ -212,8 +212,8 @@ public class Handler implements KeyListener {
 
         // DIALOGUE STATE
         else if(panel.GameState == panel.dialogueState){
-            if(keyCode == KeyEvent.VK_E){
-                panel.GameState = panel.playState;      //End Dialogue
+            if(keyCode == KeyEvent.VK_ENTER){
+                Enter = true;
             }
             //if(keyCode == KeyEvent.VK_ENTER)    panel.GameState = panel.playState;    //Skip Dialogue
 
@@ -232,6 +232,11 @@ public class Handler implements KeyListener {
             if(keyCode == KeyEvent.VK_I) {
                 //panel.playSoundEffect(5);
                 panel.GameState = panel.playState;
+            }
+            if(keyCode == KeyEvent.VK_ENTER) {
+                //panel.playSoundEffect(5);
+                Enter = false;
+                panel.player.selectItem();
             }
 
             // TODO: Add Sound Effect to everytime when cursor is moved

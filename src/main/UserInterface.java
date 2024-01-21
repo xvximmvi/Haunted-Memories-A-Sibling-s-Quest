@@ -63,6 +63,8 @@ public class UserInterface {
     public boolean MessageOn = false;
     public String Message = "";
     int MessageCounter = 0;
+    int charIndex = 0;
+    String combinedText = "";
 
     public int CompletionOfGame = 0;
 
@@ -70,6 +72,8 @@ public class UserInterface {
 
     public boolean TutorialOn = true;
     public boolean Goal = false;
+    public boolean Boss = true;
+    public boolean Boss2 = false;
     int TutorialCounter = 0;
 
     // PLAY TIME
@@ -88,6 +92,8 @@ public class UserInterface {
 
     // PLAYER LIFE
     BufferedImage Life_Full, Life_Lost;
+
+    public Entity NPC;
 
     // UI CONSTRUCTOR
     public UserInterface(GamePanel panel){
@@ -151,7 +157,7 @@ public class UserInterface {
 
             // TUTORIAL ------------------------------------------------------------------
             if (TutorialOn) {
-                graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 17F));
+                graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 20F));
                 graphics2D.setColor(Color.BLACK);
                 graphics2D.drawString("Move: WASD", panel.tileSize+2, panel.tileSize+2);
                 graphics2D.drawString("Interact: E", panel.tileSize+2, panel.tileSize + 30+2);
@@ -164,14 +170,14 @@ public class UserInterface {
                 graphics2D.drawString("Pause/Play: P", panel.tileSize, panel.tileSize + 90);
 
                 TutorialCounter++;
-                if (TutorialCounter > 240) {   //240 Frames (60 Frames per sec -> 4 sec)
+                if (TutorialCounter > 420) {   //240 Frames (60 Frames per sec -> 4 sec)
                     TutorialCounter = 0;
                     TutorialOn = false;
                     Goal = true;
                 }
             }
             else if (Goal) {
-                graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 17F));
+                graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 20F));
                 graphics2D.setColor(Color.BLACK);
                 graphics2D.drawString("Find the CARD!", panel.tileSize+2, panel.tileSize+2);
                 graphics2D.drawString("Escape the Hospital!", panel.tileSize+2, panel.tileSize + 32);
@@ -180,24 +186,61 @@ public class UserInterface {
                 graphics2D.drawString("Escape the Hospital!", panel.tileSize, panel.tileSize + 30);
 
                 TutorialCounter++;
-                if (TutorialCounter > 240) {   //180 Frames (60 Frames per sec -> 3 sec)
+                if (TutorialCounter > 300) {
                     TutorialCounter = 0;
                     Goal = false;
                 }
             }
+            else if (Boss) {
+                graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 20F));
+                graphics2D.setColor(Color.BLACK);
+                graphics2D.drawString("Hit: J", panel.tileSize+2, panel.tileSize+2+40);
+                graphics2D.drawString("Block: K", panel.tileSize+2, panel.tileSize + 30+2+40);
+                graphics2D.setColor(Color.WHITE);
+                graphics2D.drawString("Hit: J", panel.tileSize, panel.tileSize+40);
+                graphics2D.drawString("Block: K", panel.tileSize, panel.tileSize + 30+40);
 
-            drawPlayerLife();
+                TutorialCounter++;
+                if (TutorialCounter > 300) {
+                    TutorialCounter = 0;
+                    Boss = false;
+                }
+            }
+            else if (Boss2) {
+                graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 20F));
+                graphics2D.setColor(Color.BLACK);
+                graphics2D.drawString("Defeat the Enemy!", panel.tileSize + 2, panel.tileSize + 2+40);
+                graphics2D.setColor(Color.WHITE);
+                graphics2D.drawString("Defeat the Enemy!", panel.tileSize, panel.tileSize+40);
+
+                TutorialCounter++;
+                if (TutorialCounter > 240) {   //240 Frames (60 Frames per sec -> 4 sec)
+                    TutorialCounter = 0;
+                    Boss2 = false;
+                }
+            }
+
+            if (panel.player.BOSS_FIGHT){
+                drawPlayerLife();
+                drawNPCLife();
+            }
         }
 
         // PAUSE STATE  ------------------------------------------------------------------
         if(panel.GameState == panel.pauseState){
-            drawPlayerLife();
+            if(panel.player.BOSS_FIGHT) {
+                drawPlayerLife();
+                drawNPCLife();
+            }
             PauseScreen();
         }
 
         // DIALOGUE STATE   ------------------------------------------------------------------
         if(panel.GameState == panel.dialogueState){
-            drawPlayerLife();
+            if(panel.player.BOSS_FIGHT) {
+                drawPlayerLife();
+                drawNPCLife();
+            }
             DialogueWindow();
         }
 
@@ -529,7 +572,7 @@ public class UserInterface {
         graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 70F));
         String Text = "HOW TO PLAY";
         int x = CenterXText(Text);
-        int y = panel.tileSize * 3;
+        int y = (int) (panel.tileSize * 2.5);
         graphics2D.setColor(Color.GRAY);
         graphics2D.drawString(Text, x + 5, y + 5);
         graphics2D.setColor(Color.WHITE);
@@ -537,25 +580,37 @@ public class UserInterface {
 
         graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 32F));
         Text = "Move ";
-        x = panel.tileSize * 2;
+        x = panel.tileSize * 3;
         y += (int) (panel.tileSize * 2.5);
         graphics2D.setColor(Color.GRAY);
         graphics2D.drawString(Text, x + 3, y + 3);
         graphics2D.setColor(Color.WHITE);
         graphics2D.drawString(Text, x, y);
-        Text = "Interact";
+        Text = "Interaction";
         y += 36;
         graphics2D.setColor(Color.GRAY);
         graphics2D.drawString(Text, x + 3, y + 3);
         graphics2D.setColor(Color.WHITE);
         graphics2D.drawString(Text, x, y);
-        Text = "Pause/Play";
+        Text = "Open / CLose Inventory";
         y += 36;
         graphics2D.setColor(Color.GRAY);
         graphics2D.drawString(Text, x + 3, y + 3);
         graphics2D.setColor(Color.WHITE);
         graphics2D.drawString(Text, x, y);
-        Text = "Character";
+        Text = "Hit";
+        y += 36;
+        graphics2D.setColor(Color.GRAY);
+        graphics2D.drawString(Text, x + 3, y + 3);
+        graphics2D.setColor(Color.WHITE);
+        graphics2D.drawString(Text, x, y);
+        Text = "Block";
+        y += 36;
+        graphics2D.setColor(Color.GRAY);
+        graphics2D.drawString(Text, x + 3, y + 3);
+        graphics2D.setColor(Color.WHITE);
+        graphics2D.drawString(Text, x, y);
+        Text = "Select / Continue";
         y += 36;
         graphics2D.setColor(Color.GRAY);
         graphics2D.drawString(Text, x + 3, y + 3);
@@ -567,7 +622,13 @@ public class UserInterface {
         graphics2D.drawString(Text, x + 3, y + 3);
         graphics2D.setColor(Color.WHITE);
         graphics2D.drawString(Text, x, y);
-        Text = "Select";
+        Text = "Pause / Play";
+        y += 36;
+        graphics2D.setColor(Color.GRAY);
+        graphics2D.drawString(Text, x + 3, y + 3);
+        graphics2D.setColor(Color.WHITE);
+        graphics2D.drawString(Text, x, y);
+        Text = "Game- & Character-Info";
         y += 36;
         graphics2D.setColor(Color.GRAY);
         graphics2D.drawString(Text, x + 3, y + 3);
@@ -586,13 +647,44 @@ public class UserInterface {
         // LEFT SIDE       ------------------------------------------------------------------
 
         Text = "W A S D ";
-        x = panel.tileSize * 9;
-        y = panel.tileSize * 5 + 24;
+        x = panel.tileSize * 12-4;
+        y = panel.tileSize * 5;
         graphics2D.setColor(Color.GRAY);
         graphics2D.drawString(Text, x + 3, y + 3);
         graphics2D.setColor(Color.WHITE);
         graphics2D.drawString(Text, x, y);
-        Text = "E";
+        Text = "     E";
+        y += 36;
+        x = panel.tileSize * 12;
+        graphics2D.setColor(Color.GRAY);
+        graphics2D.drawString(Text, x + 3, y + 3);
+        graphics2D.setColor(Color.WHITE);
+        graphics2D.drawString(Text, x, y);
+        Text = "     I";
+        y += 36;
+        graphics2D.setColor(Color.GRAY);
+        graphics2D.drawString(Text, x + 3, y + 3);
+        graphics2D.setColor(Color.WHITE);
+        graphics2D.drawString(Text, x, y);
+        Text = "     J";
+        y += 36;
+        graphics2D.setColor(Color.GRAY);
+        graphics2D.drawString(Text, x + 3, y + 3);
+        graphics2D.setColor(Color.WHITE);
+        graphics2D.drawString(Text, x, y);
+        Text = "     K";
+        y += 36;
+        graphics2D.setColor(Color.GRAY);
+        graphics2D.drawString(Text, x + 3, y + 3);
+        graphics2D.setColor(Color.WHITE);
+        graphics2D.drawString(Text, x, y);
+        Text = "ENTER";
+        y += 36;
+        graphics2D.setColor(Color.GRAY);
+        graphics2D.drawString(Text, x + 3, y + 3);
+        graphics2D.setColor(Color.WHITE);
+        graphics2D.drawString(Text, x, y);
+        Text = "     O";
         y += 36;
         graphics2D.setColor(Color.GRAY);
         graphics2D.drawString(Text, x + 3, y + 3);
@@ -605,18 +697,6 @@ public class UserInterface {
         graphics2D.setColor(Color.WHITE);
         graphics2D.drawString(Text, x, y);
         Text = "     C";
-        y += 36;
-        graphics2D.setColor(Color.GRAY);
-        graphics2D.drawString(Text, x + 3, y + 3);
-        graphics2D.setColor(Color.WHITE);
-        graphics2D.drawString(Text, x, y);
-        Text = "     O";
-        y += 36;
-        graphics2D.setColor(Color.GRAY);
-        graphics2D.drawString(Text, x + 3, y + 3);
-        graphics2D.setColor(Color.WHITE);
-        graphics2D.drawString(Text, x, y);
-        Text = "ENTER";
         y += 36;
         graphics2D.setColor(Color.GRAY);
         graphics2D.drawString(Text, x + 3, y + 3);
@@ -724,9 +804,9 @@ public class UserInterface {
         graphics2D.drawString(text, x,y);
     }
 
-    // PLAYER LIFE
+    // LIFE
     public void drawPlayerLife(){
-        int x = panel.tileSize/2;
+        int x = panel.tileSize;
         int y = panel.tileSize/2;
         int i = 0;
 
@@ -738,7 +818,7 @@ public class UserInterface {
         }
 
         // RESET
-        x = panel.tileSize/2;
+        x = panel.tileSize;
         y = panel.tileSize/2;
         i = 0;
 
@@ -747,6 +827,23 @@ public class UserInterface {
             graphics2D.drawImage(Life_Full, x, y, null);
             i++;
             x += 28;
+        }
+    }
+    public void drawNPCLife() {
+
+        if (panel.NPC[3][0] != null) {
+
+            int x = panel.ScreenWidth - panel.tileSize - 602;
+            int y = panel.tileSize;
+            graphics2D.setColor(new Color(35, 35, 35));
+            graphics2D.fillRoundRect(x - 2, y - 2, 600+4, 24, 5,5);
+
+            graphics2D.setColor(new Color(200, 0, 30));
+            graphics2D.fillRoundRect(x+600-(30*panel.NPC[3][0].life), y, 30*panel.NPC[3][0].life, 20, 5,5);
+
+            graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 22f));
+            graphics2D.setColor(Color.WHITE);
+            graphics2D.drawString("Rapist", panel.ScreenWidth- panel.tileSize*3+40, y - 10);
         }
     }
 
@@ -807,6 +904,43 @@ public class UserInterface {
         y += panel.tileSize;
         //graphics2D.drawString(currentDialogue, x, y); //Write Dialogue
 
+
+        if(NPC.dialogueSet == -1)  NPC.dialogueSet = 2;
+        if(NPC.dialogues[NPC.dialogueSet][NPC.dialogueIndex] != null) {
+ //           currentDialogue = NPC.dialogues[NPC.dialogueSet][NPC.dialogueIndex];
+
+            char characters[] = NPC.dialogues[NPC.dialogueSet][NPC.dialogueIndex].toCharArray();
+
+            if(charIndex < characters.length) {
+
+                // TODO:
+                //panel.playSoundEffect(SOUNDFX);
+                String string = String.valueOf(characters[charIndex]);
+                combinedText = combinedText + string;
+                currentDialogue = combinedText;
+
+                charIndex++;
+            }
+
+            if(panel.handler.Enter) {
+
+                charIndex = 0;
+                combinedText = "";
+
+                if(panel.GameState == panel.dialogueState) {
+                    NPC.dialogueIndex++;
+                    panel.handler.Enter = false;
+                }
+            }
+
+        } else {    //If no text in the array
+            NPC.dialogueIndex = 0;
+            if(NPC.Snitch) {
+                panel.player.reset = true;
+                panel.GameState = panel.transitionState;
+            }
+            else if(panel.GameState == panel.dialogueState)  panel.GameState = panel.playState;
+        }
 
         //Problem: Dialogue to long to fit -> create more Strings to separate dialogue in pieces
         for(String line : currentDialogue.split("\n")){ // .split("\n")  -> knows when to split each dialogue
@@ -969,44 +1103,64 @@ public class UserInterface {
             }
         }
     }
-
     public int getItemIndexOnSlot() {
         return slotCol + slotRow*5;
     }
 
     // MAP TRANSITION
     public void drawTransitionInState(){
-        TransitionCounter++;        // Count up
-        graphics2D.setColor(new Color(0, 0, 0, 3*TransitionCounter + 5)); // gets darker the more it counts up
-        graphics2D.fillRect(0, 0, panel.ScreenWidth, panel.ScreenHeight);      //fill screen darker and darker
+        if(!panel.player.reset) {
+            TransitionCounter++;        // Count up
+            graphics2D.setColor(new Color(0, 0, 0, 3 * TransitionCounter + 5)); // gets darker the more it counts up
+            graphics2D.fillRect(0, 0, panel.ScreenWidth, panel.ScreenHeight);      //fill screen darker and darker
 
-        if (TransitionCounter == 30){   //when reached certain point
+            if (TransitionCounter >= 30) {   //when reached certain point
 
-            panel.currentMap = panel.TransitionMap;                         // Which Map to Switch to
-            if (panel.TransitionMap == 0) panel.asset.setObject_HOSPITAL_ICU();   //Set object to corresponding map
-            if (panel.TransitionMap == 1) panel.asset.setObject_HOSPITAL_HALL3F();
-            if(panel.TransitionMap == 2) panel.asset.setObject_HOSPITAL_TOILET();
-            if(panel.TransitionMap == 3) panel.asset.setObject_HOSPITAL_TOILET();
+                panel.currentMap = panel.TransitionMap;                         // Which Map to Switch to
+                if (panel.TransitionMap == 0)
+                    panel.asset.setObject_HOSPITAL_ICU();   //Set object to corresponding map
+                if (panel.TransitionMap == 1) panel.asset.setObject_HOSPITAL_HALL3F();
+                if (panel.TransitionMap == 2) panel.asset.setObject_HOSPITAL_TOILET();
+                if (panel.TransitionMap == 3) panel.asset.setObject_HOSPITAL_TOILET();
 
-            panel.player.direction = panel.TransitionDirection;
+                panel.player.direction = panel.TransitionDirection;
 
-            panel.player.MapX = panel.tileSize * panel.TransitionX - (panel.tileSize / 2);     // X-Coordinate of Spawn point
-            panel.player.MapY = panel.tileSize * panel.TransitionY - (panel.tileSize / 2);     // Y-Coordinate of Spawn point
+                panel.player.MapX = panel.tileSize * panel.TransitionX - (panel.tileSize / 2);     // X-Coordinate of Spawn point
+                panel.player.MapY = panel.tileSize * panel.TransitionY - (panel.tileSize / 2);     // Y-Coordinate of Spawn point
 
-            TransitionCounter=0;    //set counter back to zero for next Transition
-            panel.GameState = panel.transitionOutState; // go to next step (Make screen lighter again; same transition just backwards)
+                TransitionCounter = 0;    //set counter back to zero for next Transition
+                panel.GameState = panel.transitionOutState;
+
+            }
+        } else  {
+            TransitionCounter++;        // Count up
+            graphics2D.setColor(new Color(0, 0, 0, 5 * TransitionCounter + 5)); // gets darker the more it counts up
+            graphics2D.fillRect(0, 0, panel.ScreenWidth, panel.ScreenHeight);      //fill screen darker and darker
+            if (TransitionCounter == 50) {   //when reached certain point
+                panel.player.resetGame();
+                TransitionCounter = 0;    //set counter back to zero for next Transition
+                panel.GameState = panel.transitionOutState; // go to next step (Make screen lighter again; same transition just backwards)
+            }
         }
+
     }
     public void drawTransitionOutState(){
-        // go out of transition: lighten the screen again
+        int t = 30;
+        int out = 95;
+        if(panel.player.reset) {
+            t = 50;
+            out = 255;
+        }
+
         TransitionCounter++;
-        graphics2D.setColor(new Color(0, 0, 0, 95-3*TransitionCounter));    //the certain which was reached in if(TransitionCounter == 40) from methode above
-        graphics2D.fillRect(0,0, panel.ScreenWidth, panel.ScreenHeight);        //show new screen transparency
+        graphics2D.setColor(new Color(0, 0, 0, out - 3 * TransitionCounter));    //the certain which was reached in if(TransitionCounter == 40) from methode above
+        graphics2D.fillRect(0, 0, panel.ScreenWidth, panel.ScreenHeight);        //show new screen transparency
 
 
-        if(TransitionCounter == 30){    //when its lighten enough
+        if (TransitionCounter == t) {    //when its lighten enough
             TransitionCounter = 0;      //set TransitionCounter back for next needed Transition
             panel.GameState = panel.playState;  //switch back to player state
+            panel.player.reset = false;
         }
     }
 
@@ -1170,19 +1324,32 @@ public class UserInterface {
         graphics2D.drawString("Move", textX, textY);
 
         textY += lineHeight;
-        graphics2D.drawString("Interact", textX, textY);
+        graphics2D.drawString("Interaction", textX, textY);
 
         textY += lineHeight;
-        graphics2D.drawString("Pause/Play", textX, textY);
+        graphics2D.drawString("Open / Close Inventory", textX, textY);
+
+        textY +=lineHeight;
+        graphics2D.drawString("Hit", textX, textY);
+
+        textY +=lineHeight;
+        graphics2D.drawString("Block", textX, textY);
 
         textY += lineHeight;
-        graphics2D.drawString("Character", textX, textY);
+        graphics2D.drawString("Select / Continue", textX, textY);
 
         textY += lineHeight;
         graphics2D.drawString("Settings", textX, textY);
 
         textY += lineHeight;
-        graphics2D.drawString("Select", textX, textY);
+        graphics2D.drawString("Pause / Play", textX, textY);
+
+        textY += lineHeight;
+        graphics2D.drawString("Game- & Character-Info", textX, textY);
+
+
+
+
 
 
         // BOTTOM       ------------------------------------------------------------------
@@ -1204,17 +1371,24 @@ public class UserInterface {
         textX = (optionWindowX+optionWindowWidth) - (int)graphics2D.getFontMetrics().getStringBounds("W A S D", graphics2D).getWidth() - 24;
         textY = optionWindowY+ 3*panel.tileSize;
         textY +=lineHeight;
-        graphics2D.drawString("W A S D", textX, textY);
+        graphics2D.drawString("W A S D", textX-4, textY);
         textY += lineHeight;
         graphics2D.drawString("    E", textX, textY);
+        textY += lineHeight;
+        graphics2D.drawString("    I", textX, textY);
+        textY += lineHeight;
+        graphics2D.drawString("    J", textX, textY);
+        textY += lineHeight;
+        graphics2D.drawString("    K", textX, textY);
+        textY += lineHeight;
+        graphics2D.drawString("ENTER", textX, textY);
+        textY += lineHeight;
+        graphics2D.drawString("    O", textX, textY);
         textY += lineHeight;
         graphics2D.drawString("    P", textX, textY);
         textY += lineHeight;
         graphics2D.drawString("    C", textX, textY);
-        textY += lineHeight;
-        graphics2D.drawString("    O", textX, textY);
-        textY += lineHeight;
-        graphics2D.drawString("ENTER", textX, textY);
+
     }
     public void RestartGame(int optionWindowX, int optionWindowY, int optionWindowWidth){
 
@@ -1243,8 +1417,8 @@ public class UserInterface {
         if(command==0){
             graphics2D.drawString(">",textX-20, textY);
             if(panel.handler.Enter){
-                panel.GameState = panel.playState;
-                panel.handler.Reset = true;
+                panel.player.reset = true;
+                panel.GameState = panel.transitionState;
             }
         }
 

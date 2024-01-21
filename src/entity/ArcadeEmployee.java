@@ -9,16 +9,7 @@ public class ArcadeEmployee extends Entity{
         super(gamePanel);
 
         name = "ArcadeEmployee";
-        direction = "DOWN";
-        defaultSpeed = 1;
-        Speed = defaultSpeed;
-        AttackSpeed = 20;
-        Boss = true;
 
-        attack = 4;
-        defense = 0;
-
-        life = 10;
 
         ObjectWidth = gamePanel.tileSize+12;
         ObjectHeight = gamePanel.tileSize*2;
@@ -33,10 +24,24 @@ public class ArcadeEmployee extends Entity{
         AttackArea.width = gamePanel.tileSize;
         AttackArea.height = gamePanel.tileSize;
 
+        setDefault();
         NPCImage();
         NPCFightImage();
         NPCBlockImage();
         Dialogues();
+    }
+
+    public void setDefault(){
+        direction = "DOWN";
+        defaultSpeed = 4;
+        Speed = defaultSpeed;
+        AttackSpeed = 20;
+        Boss = true;
+
+        attack = 4;
+        defense = 0;
+
+        life = 20;
     }
 
     // NPC IMAGES
@@ -74,8 +79,6 @@ public class ArcadeEmployee extends Entity{
         HIT_RIGHT1 = setup("/NPC/Arcade/"+name+"/Fighting/"+name+"_Fight_Right_1.png", gamePanel.tileSize+40, gamePanel.tileSize+12);
         HIT_RIGHT2 = setup("/NPC/Arcade/"+name+"/Fighting/"+name+"_Fight_Right_2.png", gamePanel.tileSize+40, gamePanel.tileSize+12);
     }
-
-
     public void NPCBlockImage(){
         BLOCK_UP = setup("/NPC/Arcade/"+name+"/Block/"+name+"_Block_Back.png", gamePanel.tileSize, gamePanel.tileSize+12);
         BLOCK_DOWN = setup("/NPC/Arcade/"+name+"/Block/"+name+"_Block_Front.png", gamePanel.tileSize, gamePanel.tileSize+12);
@@ -85,9 +88,8 @@ public class ArcadeEmployee extends Entity{
     }
     // NPC DIALOGUES
     public void Dialogues(){
-        int i = 0;
 
-        dialogues[i] = "KILL ME!";     i++;
+        dialogues[0][0] = "KILL ME!";
 
     }
 

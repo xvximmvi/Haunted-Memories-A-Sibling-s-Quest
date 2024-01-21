@@ -92,7 +92,7 @@ public class SetAsset {
         setObjects(new HOSPITAL_Wheelchair_R(panel), 27* panel.tileSize, 27* panel.tileSize,1,23);
         setObjects(new HOSPITAL_IV_Stand(panel), 27* panel.tileSize, 25* panel.tileSize,1,24);
     }
-    public void setObject_HOSPITAL_TOILET(){
+    public void setObject_HOSPITAL_TOILET(){        // MAP 3
         setObjects(new GENERAL_Toilet_Cabin(panel), 6* panel.tileSize,11* panel.tileSize,3, 0);
         setObjects(new GENERAL_Toilet_Cabin(panel), 6* panel.tileSize+(84*2+42-14*2-11),11* panel.tileSize,3, 1);
         setObjects(new GENERAL_Toilet_Cabin(panel), 6* panel.tileSize+(84*2+42-14*2-11)*2,11* panel.tileSize,3, 2);
@@ -109,9 +109,6 @@ public class SetAsset {
 
         setObjects(new HOSPITAL_Door_Left(panel), 24* panel.tileSize+36, 16* panel.tileSize,3,10);
     }
-    public void setObject_HOSPITAL_APOTHECARY(){
-
-    }
 
 
     // SET NPC ---------------------------------------------------------------------------------------------------------
@@ -125,8 +122,10 @@ public class SetAsset {
     }
 
     //SET NPC
-    public void setNPC_HOSPITAL_ICU() {
-        setNPC(new NPC_Doctor_Female_1(panel), panel.tileSize*4, panel.tileSize*5, 1,1 );
-        setNPC(new ArcadeEmployee(panel), panel.tileSize*12, panel.tileSize*12, 0,0);
+    public void setNPCs() {
+        setNPC(new ArcadeEmployee(panel), panel.tileSize*12, panel.tileSize*15, 3,0);
+        setNPC(new NPC_Doctor_Female_1(panel), panel.tileSize*12, panel.tileSize*12, 0,1);
+        setNPC(new NPC_Doctor_Female_1(panel), panel.tileSize*4, panel.tileSize*5, 1,2);
+
     }
 }

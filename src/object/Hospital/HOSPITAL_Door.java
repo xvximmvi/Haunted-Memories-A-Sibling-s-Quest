@@ -17,5 +17,11 @@ public class HOSPITAL_Door extends Entity {
         DOWN1 = setup("/Objects/Hospital/" + name + ".png", ObjectWidth, ObjectHeight);
 
         collision = true;
+        setDialogue();
+    }
+
+    public void setDialogue() {
+        dialogues[0][0] = "I can't leave that poor guy alone! I need to help him.";
+
     }
 }

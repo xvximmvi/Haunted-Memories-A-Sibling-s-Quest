@@ -13,8 +13,6 @@ public class NPC_Doctor_Female_1 extends Entity{
         direction = "DOWN";
         Speed = 1;
 
-        life = 3;
-
         ObjectWidth = gamePanel.tileSize+12;
         ObjectHeight = gamePanel.tileSize*2;
 
@@ -27,6 +25,7 @@ public class NPC_Doctor_Female_1 extends Entity{
 
         NPCImage();
         Dialogues();
+        dialogueSet = -1;
     }
 
     // PLAYER IMAGES
@@ -50,14 +49,23 @@ public class NPC_Doctor_Female_1 extends Entity{
 
     // NPC DIALOGUES
     public void Dialogues(){
-        int i = 0;
+        dialogues[0][0] = "This fucking NPC took me 8 hours.";
+        dialogues[0][1] = "It does nothing but walk and talk.";
+        dialogues[0][2] = "8 hours for walking and talking...\nStill I am so proud..";
+        dialogues[0][3] = "Please kill me...";
+        dialogues[0][4] = "I hate this game...";
+        dialogues[0][5] = "I am going to kill Simba and myself when this game is done!\nI'm going to be a Real-Life Dieter A. Keller just you wait!";
 
-        dialogues[i] = "This fucking NPC took me 8 hours.";     i++;
-        dialogues[i] = "It does nothing but walk and talk.";     i++;
-        dialogues[i] = "8 hours for walking and talking...\nStill I am so proud..";     i++;
-        dialogues[i] = "Please kill me...";     i++;
-        dialogues[i] = "I hate this game...";     i++;
-        dialogues[i] = "I am going to kill Simba and myself when this game is done!\nI'm going to be a Real-Life Dieter A. Keller just you wait!";
+        dialogues[1][0] = "Seems like we are in Australia.";
+        dialogues[1][1] = "Unfortunately we are not in Switzerland..";
+        dialogues[1][2] = "If we were, I would be legally allowed to go to the doctor\nand ask him to kill me.";
+        dialogues[1][3] = "I am going to make it work anyway! I will find a way.";
+        dialogues[1][4] = "Now go fuck yourself. You're getting annoying.";
+
+        dialogues[2][0] = "You should be in bed!";
+        dialogues[2][1] = "The Fuck are you doing here?";
+        dialogues[2][2] = "Get your ass back in bed!";
+
     }
 
     // NPC ACTION
@@ -68,6 +76,15 @@ public class NPC_Doctor_Female_1 extends Entity{
 
         searchPath(goalCol, goalRow);*/
 
+        Snitch = gamePanel.currentMap == 1;
+
+        if(Snitch) {
+            Speed = 3;
+            int goalCol = (gamePanel.player.MapX + gamePanel.player.Area.x) / gamePanel.tileSize;
+            int goalRow = (gamePanel.player.MapY + gamePanel.player.Area.y) / gamePanel.tileSize;
+
+            searchPath(goalCol, goalRow);
+        } else Speed = 1;
 
         actionCounter++;
 
@@ -86,7 +103,15 @@ public class NPC_Doctor_Female_1 extends Entity{
 
     public void Speak() {
         // Do this character specific stuff
-        super.Speak();
+
+        if(Snitch)      dialogueSet = 2;
+
+        facePlayer();
+        startDialogue(this, dialogueSet);
+
+        dialogueSet++;
+        if(!Snitch)     if(dialogueSet == 2)    dialogueSet = 0;
+
     }
 
 }

@@ -70,14 +70,14 @@ public class Entity {
     public int untouchableCounter = 0;
 
     // DIALOGUES ATTRIBUTES -------------------------------------------------------------------------------
-    String[] dialogues = new String[20];
-    int dialogueIndex = 0;
+    public String[][] dialogues = new String[20][20];
+    public int dialogueIndex = 0;
+    public int dialogueSet = 0;
 
     // OBJECTS ATTRIBUTES ---------------------------------------------------------------------------------
     public String name;
     public int ObjectWidth;
     public int ObjectHeight;
-    public int DefaultWidth = ObjectWidth;
     public boolean collision = false;
 
     // ITEM ATTRIBUTES ------------------------------------------------------------------------------------
@@ -107,12 +107,8 @@ public class Entity {
     public boolean Alive = true;
     public boolean Dead = false;
     public int DeathCounter = 0;
-    public boolean onPath = false;
     public boolean knockBack = false;
     int knockBackCounter = 0;
-    public boolean PlayerNPC = false;
-    public boolean NPCPlayer = false;
-    public boolean Opposite = false;
 
 
     public Entity(GamePanel gamePanel) {
@@ -137,12 +133,18 @@ public class Entity {
 
     public void Action() {
 
+
     }
     public void Speak(){
-        if(dialogues[dialogueIndex] == null)    dialogueIndex = 0;
-        gamePanel.ui.currentDialogue = dialogues[dialogueIndex];
-        dialogueIndex++;
 
+    }
+
+    public void startDialogue(Entity entity, int setNum){
+        gamePanel.GameState = gamePanel.dialogueState;
+        gamePanel.ui.NPC = entity;
+        dialogueSet = setNum;
+    }
+    public void facePlayer(){
         switch (gamePanel.player.direction) {
             case "UP" -> direction = "DOWN";
             case "DOWN" -> direction = "UP";
@@ -191,7 +193,7 @@ public class Entity {
             defense = 0;
             Action();
 
-            AttackingDetection(30, gamePanel.tileSize*4, gamePanel.tileSize);
+            if(Boss)    AttackingDetection(30, gamePanel.tileSize*4, gamePanel.tileSize);
 
             detectCollision();  // Detect all Collisions
 
@@ -315,7 +317,7 @@ public class Entity {
 
     }
 
-    // ATTACK
+    // ATTACK & DEFENSE
     public void attacking() {
         spriteCounter++;
         if (spriteCounter <= AttackSpeed)     spriteNum = 1;
@@ -364,7 +366,6 @@ public class Entity {
             else        gamePanel.player.handler.ATTACK = false;
         }
     }
-
     public void defending() {
         int addCounter = new Random().nextInt(5);
         DefenseCounter += addCounter;
@@ -377,7 +378,6 @@ public class Entity {
             Defense = false;
         }
     }
-
 
     public void damagePlayer(int attack) {
 
@@ -403,15 +403,6 @@ public class Entity {
     }
     public int getYDistance(Entity target) {
         return Math.abs(MapY - target.MapY);
-    }
-    public int getTileDistance(Entity target) {
-        return getYDistance(target) + getYDistance(target);
-    }
-    public int getGoalCol(Entity target) {
-        return (target.MapX + target.Area.x) / gamePanel.tileSize;
-    }
-    public int getGoalRow(Entity target) {
-        return (target.MapY + target.Area.y) / gamePanel.tileSize;
     }
 
 
@@ -471,6 +462,7 @@ public class Entity {
         if(DeathCounter > i*19 && DeathCounter >= i*20) changeAlpha(graphics2D, 0f);
         if(DeathCounter > i*20 && DeathCounter >= i*22) changeAlpha(graphics2D, 1f);
         if(DeathCounter > i*22) {
+            untouchable = false;
             Dead = false;
             Alive = false;
         }
@@ -550,4 +542,44 @@ public class Entity {
             if(nextCol == goalCol && nextRow == goalRow)    onPath = false;*/
         }
     }
+
+    public int getLeftX(){ return MapX + Area.x;}
+    public int getRightX(){ return MapX + Area.x + Area.width;}
+    public int getTopY(){ return MapY + Area.y;}
+    public int getBottomY(){ return MapY + Area.y + Area.height;}
+    public int getCol() {return (MapX + Area.x)/ gamePanel.tileSize;}
+    public int getRow() {return (MapY + Area.y)/ gamePanel.tileSize;}
+
+
+    public boolean use(Entity entity) {return false;}
+    public int getDetect(Entity user, Entity[][] target, String targetName) {
+        int index = 999;
+
+        // Check the surrounding object
+        int nextMapX = user.getLeftX();
+        int nextMapY = user.getTopY();
+
+        switch (user.direction) {
+            case "UP" -> nextMapY = user.getTopY()-1;
+            case "DOWN" -> nextMapY = user.getBottomY()+1;
+            case "LEFT" -> nextMapY = user.getLeftX()-1;
+            case "RIGHT" -> nextMapY = user.getRightX()+1;
+        }
+
+        int col = nextMapX / gamePanel.tileSize;
+        int row = nextMapY / gamePanel.tileSize;
+
+        for(int i = 0; i < target[1].length; i++) {
+            if(target[gamePanel.currentMap][i] != null) {
+                if(target[gamePanel.currentMap][i].getCol() == col &&
+                        target[gamePanel.currentMap][i].getRow() == row &&
+                        target[gamePanel.currentMap][i].name.equals(targetName)) {
+                    index = 1;
+                    break;
+                }
+            }
+        }
+        return index;
+    }
+
 }

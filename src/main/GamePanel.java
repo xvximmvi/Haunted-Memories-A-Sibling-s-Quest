@@ -50,7 +50,6 @@ public class GamePanel extends JPanel implements Runnable{
 
     // ENTITY AND OBJECT
     public Player player = new Player(this, this.handler);          //public for Manager
-    //handler.setPlayer(player);
     public Entity[][] object = new Entity[maxMap][50];
     public Entity[][] NPC = new Entity[maxMap][10];
     ArrayList<Entity> entityList = new ArrayList<>();
@@ -87,7 +86,7 @@ public class GamePanel extends JPanel implements Runnable{
     // SETUP GAME
     public void setUpGame(){
         asset.setObject_HOSPITAL_ICU();
-        asset.setNPC_HOSPITAL_ICU();
+        asset.setNPCs();
         //playMusic(0);
         GameState = titleState;
     }
@@ -138,12 +137,13 @@ public class GamePanel extends JPanel implements Runnable{
             player.update();        //update Player position
 
             // NPC
-            for(int i = 0; i < NPC[1].length; i++){
-                if(NPC[currentMap][i] != null) {
-                    if(NPC[currentMap][i].Alive && !NPC[currentMap][i].Dead)    NPC[currentMap][i].update();
-                    if(!NPC[currentMap][i].Alive)   NPC[currentMap][i] = null;
+            for (int i = 0; i < NPC[1].length; i++) {
+                if (NPC[currentMap][i] != null) {
+                    if (NPC[currentMap][i].Alive && !NPC[currentMap][i].Dead) NPC[currentMap][i].update();
+                    if (!NPC[currentMap][i].Alive) NPC[currentMap][i] = null;
                 }
             }
+
 
             if(ui.playTime <= 0){   //if Play Time is up
                 GameState = GameOverState;

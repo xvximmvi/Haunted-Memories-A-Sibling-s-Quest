@@ -17,10 +17,20 @@ public class Player  extends Entity {
 
     int InteractionCounter=0;           //InteractionCounter: slower interaction with objects
     int ObjectCounter = 0;
-    int untouchableBlink = 0;
 
     public ArrayList<Entity> Inventory = new ArrayList<>();
     public final int InventorySize = 20;
+
+    int d = 0;
+
+    public boolean reset = false;
+
+    public boolean BOSS_FIGHT = false;
+
+
+    // TASKS
+    public boolean Medication = false;
+    public  boolean GiveMeds = true;
 
     // PLAYER CONSTRUCTOR
     public Player(GamePanel gamePanel, Handler handler) {
@@ -77,10 +87,6 @@ public class Player  extends Entity {
     }
 
     public void setItems() {
-        Inventory.add(new HOSPITAL_Medication(gamePanel));
-        Inventory.add(new HOSPITAL_Scalpel(gamePanel));
-        Inventory.add(new GENERAL_Card_2(gamePanel));
-
     }
 
     // PLAYER IMAGES
@@ -130,6 +136,14 @@ public class Player  extends Entity {
     public void update() {
         //update current position of player
         if(!Dead) {
+            if(gamePanel.NPC[3][0] != null) {
+                BOSS_FIGHT = gamePanel.currentMap == 3;
+                gamePanel.ui.Boss = gamePanel.currentMap == 3;
+            }
+
+            if(gamePanel.GameState == gamePanel.inventoryState) {
+                selectItem();
+            }
             // ATTACK
             if (handler.ATTACK) {
                 attacking();
@@ -196,8 +210,10 @@ public class Player  extends Entity {
                 }
             }
         }
+        if(!Alive) {
+            gamePanel.GameState = gamePanel.GameOverState;
+        }
     }
-
 
     // OBJECT INTERACTION
     public void InteractionObject(int index) {
@@ -215,12 +231,42 @@ public class Player  extends Entity {
                             switch (ObjectName) {
                                  case "Door" -> {
                                     //gamePanel.playSoundEffect(4);
-                                    switchMap(1, 2, 25, "RIGHT");
+                                     if(GiveMeds) {
+                                         switchMap(1, 2, 25, "RIGHT");
+                                     } else {
+                                         if(d == 0) {
+                                             gamePanel.object[gamePanel.currentMap][index].dialogues[0][0] = "I can't leave that poor guy alone! I need to help him.";
+                                             startDialogue(gamePanel.object[gamePanel.currentMap][index], 0);
+                                         } else if(d == 1) {
+                                             gamePanel.object[gamePanel.currentMap][index].dialogues[0][0] = "I am not leaving! And you can't make me.";
+                                             startDialogue(gamePanel.object[gamePanel.currentMap][index], 0);
+                                         } else if(d == 2) {
+                                             gamePanel.object[gamePanel.currentMap][index].dialogues[0][0] = "You are heartless. Just leaving the poor man to suffer?\nHow can you sleep at night?";
+                                             startDialogue(gamePanel.object[gamePanel.currentMap][index], 0);
+                                         }
+                                         d++;
+                                         if(d==3)   d=0;
+                                     }
                                 }
                                 case "Medication_Shelf_F" -> {
-                                    gamePanel.GameState = gamePanel.dialogueState;
-                                    gamePanel.ui.currentDialogue = dialogues[0];
-                                    pickUpObject(new HOSPITAL_Medication(gamePanel), 0);
+                                    if(Medication) {
+                                        gamePanel.object[gamePanel.currentMap][index].dialogues[0][0] = "I already have enough..\nWhy would I need more?";
+                                        startDialogue(gamePanel.object[gamePanel.currentMap][index], 0);
+                                    }
+                                    else {
+                                        Medication = true;
+                                        startDialogue(gamePanel.object[gamePanel.currentMap][index], 0);
+                                        pickUpItem(new HOSPITAL_Medication(gamePanel), 0);
+                                    }
+                                }
+                                case "Nightstand_Flowers_B" -> {
+                                     if(GiveMeds) {
+                                         gamePanel.object[gamePanel.currentMap][index].dialogues[0][0] = "He reminds me a bit of my brother!\nCan't you see the similarities?\n";
+                                         startDialogue(gamePanel.object[gamePanel.currentMap][index], 0);
+                                     } else {
+                                         startDialogue(gamePanel.object[gamePanel.currentMap][index], 0);
+                                     }
+
                                 }
                             }
                         }
@@ -248,36 +294,47 @@ public class Player  extends Entity {
             }
         }
     }
-    public void pickUpObject(Entity object, int soundFX) {
+    public void selectItem() {
+        int itemIndex = gamePanel.ui.getItemIndexOnSlot();
+
+        if(itemIndex < Inventory.size()) {
+            Entity selectedItem = Inventory.get(itemIndex);
+            if(selectedItem.use(this))  Inventory.remove(itemIndex);
+        }
+    }
+    public void pickUpItem(Entity object, int soundFX) {
         if(Inventory.size() != InventorySize) {
             Inventory.add(object);
             //gamePanel.playSoundEffect(soundFX);
         }
     }
-    public void useObject(Entity object, int soundFX) {
-        Inventory.remove(object);
-        //gamePanel.playSoundEffect(soundFX);
-    }
 
+    // DIALOGUES
     public void setDialogues(){
-        int i = 0;
-
         // ICU
-        dialogues[i]="Ah, yes!\nThe Anti-Depressions I need to finish this code.";
+
     }
 
     // NPC INTERACTION
     public void InteractionNPC(int index) {
         if(index != 999) {
             if(handler.INTERACT) {
-                gamePanel.GameState = gamePanel.dialogueState;
                 gamePanel.NPC[gamePanel.currentMap][index].Speak();
             }
         }
     }
     public void contactBoss(int index) {
         if(index != 999) {
-            if(gamePanel.NPC[gamePanel.currentMap][index].Boss) {
+            if(gamePanel.NPC[gamePanel.currentMap][index].Snitch){
+               /* if(done) {
+                    gamePanel.GameState = gamePanel.transitionState;
+                    resetGame();
+                    done = false;
+                } else */startDialogue(gamePanel.NPC[gamePanel.currentMap][index], gamePanel.NPC[gamePanel.currentMap][index].dialogueSet);
+
+
+            }
+            else if (gamePanel.NPC[gamePanel.currentMap][index].Boss) {
                 if (!untouchable) {
                     if(gamePanel.NPC[gamePanel.currentMap][index].Attack)
                         damagePlayer(gamePanel.NPC[gamePanel.currentMap][index].attack);
@@ -310,8 +367,14 @@ public class Player  extends Entity {
         }
     }
 
-
-
+    // SWITCH ROOMS/MAPS
+    public void switchMap(int Map, int x, int y, String direction) {
+        gamePanel.TransitionMap = Map;
+        gamePanel.TransitionX = x;
+        gamePanel.TransitionY = y;
+        gamePanel.TransitionDirection = direction;
+        gamePanel.GameState = gamePanel.transitionState;
+    }
 
     public void draw(Graphics2D graphics2d) {
         //draw object with current information
@@ -320,65 +383,66 @@ public class Player  extends Entity {
         //graphics2d.setColor(Color.WHITE);
         //graphics2d.fillRect(MapX,MapY,gamePanel.tileSize,gamePanel.tileSize);
 
-
-        // DRAW SPRITE IMAGE
-        BufferedImage image = null;
-        if(!Dead) {
-            switch (direction) {         //each possible direction
-                case "UP" -> {
-                    if (!handler.ATTACK && !handler.DEFENSE) {
-                        if (spriteNum == 1 || spriteNum == 3) drawImage = UP2;
-                        if (spriteNum == 2) drawImage = UP1;
-                        if (spriteNum == 4) drawImage = UP3;
-                    } else {
-                        if (handler.DEFENSE) drawImage = BLOCK_UP;
-                        else {
-                            if (spriteNum == 1) drawImage = HIT_UP1;
-                            if (spriteNum == 2) drawImage = HIT_UP2;
+        if(Alive) {
+            // DRAW SPRITE IMAGE
+            BufferedImage image = null;
+            if (!Dead) {
+                switch (direction) {         //each possible direction
+                    case "UP" -> {
+                        if (!handler.ATTACK && !handler.DEFENSE) {
+                            if (spriteNum == 1 || spriteNum == 3) drawImage = UP2;
+                            if (spriteNum == 2) drawImage = UP1;
+                            if (spriteNum == 4) drawImage = UP3;
+                        } else {
+                            if (handler.DEFENSE) drawImage = BLOCK_UP;
+                            else {
+                                if (spriteNum == 1) drawImage = HIT_UP1;
+                                if (spriteNum == 2) drawImage = HIT_UP2;
+                            }
                         }
                     }
-                }
-                case "DOWN" -> {
-                    if (!handler.ATTACK && !handler.DEFENSE) {
-                        if (spriteNum == 1 || spriteNum == 3) drawImage = DOWN2;
-                        if (spriteNum == 2) drawImage = DOWN1;
-                        if (spriteNum == 4) drawImage = DOWN3;
-                    } else {
-                        if (handler.DEFENSE) drawImage = BLOCK_DOWN;
-                        else {
-                            if (spriteNum == 1) drawImage = HIT_DOWN1;
-                            if (spriteNum == 2) drawImage = HIT_DOWN2;
+                    case "DOWN" -> {
+                        if (!handler.ATTACK && !handler.DEFENSE) {
+                            if (spriteNum == 1 || spriteNum == 3) drawImage = DOWN2;
+                            if (spriteNum == 2) drawImage = DOWN1;
+                            if (spriteNum == 4) drawImage = DOWN3;
+                        } else {
+                            if (handler.DEFENSE) drawImage = BLOCK_DOWN;
+                            else {
+                                if (spriteNum == 1) drawImage = HIT_DOWN1;
+                                if (spriteNum == 2) drawImage = HIT_DOWN2;
+                            }
                         }
                     }
-                }
-                case "LEFT" -> {
-                    if (!handler.ATTACK && !handler.DEFENSE) {
-                        if (spriteNum == 1 || spriteNum == 3) drawImage = LEFT2;
-                        if (spriteNum == 2) drawImage = LEFT1;
-                        if (spriteNum == 4) drawImage = LEFT3;
-                    } else {
-                        if (handler.DEFENSE) drawImage = BLOCK_LEFT;
-                        else {
-                            if (spriteNum == 1) drawImage = HIT_LEFT1;
-                            if (spriteNum == 2) drawImage = HIT_LEFT2;
+                    case "LEFT" -> {
+                        if (!handler.ATTACK && !handler.DEFENSE) {
+                            if (spriteNum == 1 || spriteNum == 3) drawImage = LEFT2;
+                            if (spriteNum == 2) drawImage = LEFT1;
+                            if (spriteNum == 4) drawImage = LEFT3;
+                        } else {
+                            if (handler.DEFENSE) drawImage = BLOCK_LEFT;
+                            else {
+                                if (spriteNum == 1) drawImage = HIT_LEFT1;
+                                if (spriteNum == 2) drawImage = HIT_LEFT2;
+                            }
                         }
                     }
-                }
-                case "RIGHT" -> {
-                    if (!handler.ATTACK && !handler.DEFENSE) {
-                        if (spriteNum == 1 || spriteNum == 3) drawImage = RIGHT2;
-                        if (spriteNum == 2) drawImage = RIGHT1;
-                        if (spriteNum == 4) drawImage = RIGHT3;
-                    } else {
-                        if (handler.DEFENSE) drawImage = BLOCK_RIGHT;
-                        else {
-                            if (spriteNum == 1) drawImage = HIT_RIGHT1;
-                            if (spriteNum == 2) drawImage = HIT_RIGHT2;
+                    case "RIGHT" -> {
+                        if (!handler.ATTACK && !handler.DEFENSE) {
+                            if (spriteNum == 1 || spriteNum == 3) drawImage = RIGHT2;
+                            if (spriteNum == 2) drawImage = RIGHT1;
+                            if (spriteNum == 4) drawImage = RIGHT3;
+                        } else {
+                            if (handler.DEFENSE) drawImage = BLOCK_RIGHT;
+                            else {
+                                if (spriteNum == 1) drawImage = HIT_RIGHT1;
+                                if (spriteNum == 2) drawImage = HIT_RIGHT2;
+                            }
                         }
                     }
                 }
             }
-        }
+        } else drawImage = DEAD_2;
 
         /// STOP SCREEN AT EDGE OF MAP
         int x = ScreenX;
@@ -400,7 +464,7 @@ public class Player  extends Entity {
         if(BottomOffset > gamePanel.MapHeight - MapY)
             y = gamePanel.ScreenHeight - (gamePanel.MapHeight - MapY);
 
-        if(untouchable) graphics2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+        if(untouchable && Alive) graphics2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
 
         if(Dead)   DeathAnimation(graphics2d);
 
@@ -411,14 +475,30 @@ public class Player  extends Entity {
 
     }
 
-    // SWITCH ROOMS/MAPS
-    public void switchMap(int Map, int x, int y, String direction) {
-        gamePanel.TransitionMap = Map;
-        gamePanel.TransitionX = x;
-        gamePanel.TransitionY = y;
-        gamePanel.TransitionDirection = direction;
-        gamePanel.GameState = gamePanel.transitionState;
-    }
+    public void resetGame() {
 
+        gamePanel.asset.setObject_HOSPITAL_ICU();
+        gamePanel.asset.setNPCs();
+        setDefaultValues();
+
+        Dead = false;
+        Alive = true;
+
+        gamePanel.currentMap = 0;
+
+        d=0;
+
+        gamePanel.ui.playTime = 100;
+
+        gamePanel.NPC[3][0].life = 20;
+        gamePanel.NPC[3][0].direction = "DOWN";
+
+        Inventory.clear();
+
+        Medication = false;
+        GiveMeds = false;
+
+        gamePanel.ui.TutorialOn = true;
+    }
 
 }
