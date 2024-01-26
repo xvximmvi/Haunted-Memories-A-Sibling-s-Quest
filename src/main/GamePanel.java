@@ -18,8 +18,8 @@ public class GamePanel extends JPanel implements Runnable{
     //final int scale = 2;            //multiply by 3
     //48*2 = 96 -> 96x96    --> To Big
     public int tileSize = originalTileSize+24;      //72px
-    public final int maxScreenCol = 18;             //tiles displayed horizontally
-    public final int maxScreenRow = 12;             //tiles displayed vertically
+    public final int maxScreenCol = 18; //18             //tiles displayed horizontally
+    public final int maxScreenRow = 12; //12            //tiles displayed vertically
     public final int ScreenWidth = tileSize*maxScreenCol;  //768px
     public final int ScreenHeight = tileSize*maxScreenRow; //576px
 
@@ -87,7 +87,7 @@ public class GamePanel extends JPanel implements Runnable{
     public void setUpGame(){
         asset.setObject_HOSPITAL_ICU();
         asset.setNPCs();
-        //playMusic(0);
+        playMusic(0);
         GameState = titleState;
     }
 

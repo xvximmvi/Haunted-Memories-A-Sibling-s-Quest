@@ -12,7 +12,7 @@ public class Game {
         window = new JFrame();       //first create window
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  //lets the window properly close when user clicks the close ("x") button
         window.setResizable(false);         //no resizing of the window
-        window.setTitle("Haunted Memories");      //Title of the Game
+        window.setTitle("Haunted Memories: A Sibling's Quest");      //Title of the Game
 
         // ICON
         new Game().setIcon();
@@ -34,7 +34,7 @@ public class Game {
 
     // SET ICON
     public void setIcon(){
-        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Sound/Icon.png")));
+        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("Icon.png")));
         window.setIconImage(imageIcon.getImage());
     }
 }

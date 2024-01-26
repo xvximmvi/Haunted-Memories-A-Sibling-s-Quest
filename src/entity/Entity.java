@@ -384,8 +384,9 @@ public class Entity {
         if(!gamePanel.player.untouchable) {
             // we can give damage
             // SOUND FX
-           // knockBack(gamePanel.player);
+            // knockBack(gamePanel.player);
 
+            if(Attack)  gamePanel.playSoundEffect(4);
 
             int damage = attack - gamePanel.player.defense;
             if(damage < 0) damage = 0;

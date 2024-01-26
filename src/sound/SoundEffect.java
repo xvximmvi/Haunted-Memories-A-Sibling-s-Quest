@@ -17,16 +17,19 @@ import java.net.URL;
 public class SoundEffect {
 
     Clip clip ;
-    URL[] soundEffect = new URL[10];
+    URL[] soundEffect = new URL[20];
     FloatControl floatControl;
     public int volumeScale = 3;
     float volume;
 
     // SOUND FILES
     public SoundEffect(){
-        //TODO: Add music files to "/Sound/SoundFX/" Directory. Save as Wave-file.
-        // Add new directory for to systemize files for better structure and fast search
-        //soundEffect[0] = getClass().getResource("/Sound/SoundFX/SOUND.wav");
+        soundEffect[0] = getClass().getResource("/Sound/SoundFX/Dialogue_Dot.wav");
+        soundEffect[1] = getClass().getResource("/Sound/SoundFX/HighDot.wav");
+        soundEffect[2] = getClass().getResource("/Sound/SoundFX/RoundDot.wav");
+        soundEffect[3] = getClass().getResource("/Sound/SoundFX/Door.wav");
+        //soundEffect[4] = getClass().getResource("/Sound/SoundFX/PunchHit.wav");
+
     }
 
     // OPEN FILE

@@ -232,6 +232,7 @@ public class Player  extends Entity {
                                  case "Door" -> {
                                     //gamePanel.playSoundEffect(4);
                                      if(GiveMeds) {
+                                         gamePanel.playSoundEffect(3);
                                          switchMap(1, 2, 25, "RIGHT");
                                      } else {
                                          if(d == 0) {
@@ -274,9 +275,10 @@ public class Player  extends Entity {
                             switch (ObjectName) {
                                 case "Door_Right" -> {
                                     if (MapY > 18*gamePanel.tileSize) {
-                                        //gamePanel.playSoundEffect(4);
+                                        gamePanel.playSoundEffect(3);
                                         switchMap(0, 20, 10, "DOWN");
                                     } else {
+                                        gamePanel.playSoundEffect(3);
                                         switchMap(3, 24, 17, "LEFT");
                                     }
                                 }
@@ -285,6 +287,7 @@ public class Player  extends Entity {
                         case 3 -> {
                             switch (ObjectName) {
                                 case "Door_Left" -> {
+                                    gamePanel.playSoundEffect(3);
                                     switchMap(1, 2, 16, "RIGHT");
                                 }
                             }
@@ -347,7 +350,7 @@ public class Player  extends Entity {
         if(index != 999) {
             if (gamePanel.NPC[gamePanel.currentMap][index].Boss) {
 
-                //TODO: gamePanel.playSoundEffect(soundFX);
+                gamePanel.playSoundEffect(4);
 
                 knockBack(gamePanel.NPC[gamePanel.currentMap][index]);
 

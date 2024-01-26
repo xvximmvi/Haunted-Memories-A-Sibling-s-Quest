@@ -710,19 +710,36 @@ public class UserInterface {
 
         int y = panel.handler.y;
 
+
         // GAME TITLE       ------------------------------------------------------------------
         graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 96F));
-        String Text = "WAY OUT";
+        String Text = "Haunted Memories";
         int x = CenterXText(Text);
         y += panel.tileSize * 3;
+
+        // SHADOW
         graphics2D.setColor(Color.GRAY);
         graphics2D.drawString(Text, x + 5, y + 5);
+
+        // MAIN COLOR
         graphics2D.setColor(Color.WHITE);
         graphics2D.drawString(Text, x, y);
-        y += panel.tileSize * 3;
+        graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 60F));
+        Text = "A Sibling's Quest";
+        x = CenterXText(Text);
+        y += panel.tileSize;
+
+        // SHADOW
+        graphics2D.setColor(Color.GRAY);
+        graphics2D.drawString(Text, x + 5, y + 5);
+
+        // MAIN COLOR
+        graphics2D.setColor(Color.WHITE);
+        graphics2D.drawString(Text, x, y);
 
         graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 22F));
 
+        y += panel.tileSize*3;
         // CREDITS
         String credits = """
                 Game by
@@ -914,7 +931,7 @@ public class UserInterface {
             if(charIndex < characters.length) {
 
                 // TODO:
-                //panel.playSoundEffect(SOUNDFX);
+                panel.playSoundEffect(1);
                 String string = String.valueOf(characters[charIndex]);
                 combinedText = combinedText + string;
                 currentDialogue = combinedText;

@@ -30,7 +30,11 @@ public class Sound {
     public Sound(){
         //TODO: Add music files to "/Sound/Music/" Directory. Save as Wave-file.
         // Add new directory for to systemize files for better structure and fast search
-        //sound[0] = getClass().getResource("/Sound/Music/MELODY.wav");
+        sound[0] = getClass().getResource("/Sound/Music/MainTheme_10m.wav");
+        sound[1] = getClass().getResource("/Sound/Music/PianoOutro.wav");
+        sound[2] = getClass().getResource("/Sound/Music/MainTheme_4m.wav");
+        sound[3] = getClass().getResource("/Sound/Music/HospitalIntro.wav");
+
     }
 
     // OPEN FILE
