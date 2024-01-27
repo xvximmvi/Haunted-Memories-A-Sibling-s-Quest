@@ -33,6 +33,8 @@ package main;
 
 import entity.Entity;
 
+import java.awt.*;
+
 public class CollisionDetection {
     GamePanel panel;
 
@@ -112,56 +114,67 @@ public class CollisionDetection {
                 panel.object[panel.currentMap][i].Area.x = panel.object[panel.currentMap][i].MapX + panel.object[panel.currentMap][i].Area.x; //no need for coordinates like in TileDetection
                 panel.object[panel.currentMap][i].Area.y = panel.object[panel.currentMap][i].MapY + panel.object[panel.currentMap][i].Area.y;
 
-                switch (entity.direction) {
-                    case "UP" -> {
-                        entity.Area.y -= entity.Speed;      //when going UP -> Y-Coordinate - Speed (4 px)
+                if(!entity.still || !player) {
+                    switch (entity.direction) {
+                        case "UP" -> {
+                            entity.Area.y -= entity.Speed;      //when going UP -> Y-Coordinate - Speed (4 px)
 
-                        //automatically checks if entity.Area & panel.object[panel.currentMap][i].Area have intersection
-                        if (entity.Area.intersects(panel.object[panel.currentMap][i].Area)) {     //A intersection B
-                            if (panel.object[panel.currentMap][i].collision)  //collision == true -> if Object is solid (has collision Area)...
-                                entity.collisionOn = true;  //then collision is happening
+                            //automatically checks if entity.Area & panel.object[panel.currentMap][i].Area have intersection
+                            if (entity.Area.intersects(panel.object[panel.currentMap][i].Area)) {     //A intersection B
+                                if (panel.object[panel.currentMap][i].collision)  //collision == true -> if Object is solid (has collision Area)...
+                                    entity.collisionOn = true;  //then collision is happening
 
-                            if (player)                     //player == true (player from boolean)
-                                objectIndex = i;                  //if it is player, we return the index, if it is an NPC we ignore
-                        }
-                    }
-                    case "DOWN" -> {
-                        entity.Area.y += entity.Speed;
-                        if (entity.Area.intersects(panel.object[panel.currentMap][i].Area)) {
-                            if (panel.object[panel.currentMap][i].collision) {  //collision == true
-                                entity.collisionOn = true;
-                            }
-                            if (player) {                     //player == true
-                                objectIndex = i;
+                                if (player)                     //player == true (player from boolean)
+                                    objectIndex = i;                  //if it is player, we return the index, if it is an NPC we ignore
                             }
                         }
-                    }
-                    case "LEFT" -> {
-                        entity.Area.x -= entity.Speed;
-                        if (entity.Area.intersects(panel.object[panel.currentMap][i].Area)) {
-                            if (panel.object[panel.currentMap][i].collision) {  //collision == true
-                                entity.collisionOn = true;
+                        case "DOWN" -> {
+                            entity.Area.y += entity.Speed;
+                            if (entity.Area.intersects(panel.object[panel.currentMap][i].Area)) {
+                                if (panel.object[panel.currentMap][i].collision) {  //collision == true
+                                    entity.collisionOn = true;
+                                }
+                                if (player) {                     //player == true
+                                    objectIndex = i;
+                                }
                             }
-                            if (player) {                     //player == true
-                                objectIndex = i;
+                        }
+                        case "LEFT" -> {
+                            entity.Area.x -= entity.Speed;
+                            if (entity.Area.intersects(panel.object[panel.currentMap][i].Area)) {
+                                if (panel.object[panel.currentMap][i].collision) {  //collision == true
+                                    entity.collisionOn = true;
+                                }
+                                if (player) {                     //player == true
+                                    objectIndex = i;
+                                }
+                            }
+                        }
+                        case "RIGHT" -> {
+                            entity.Area.x += entity.Speed;
+                            if (entity.Area.intersects(panel.object[panel.currentMap][i].Area)) {
+                                if (panel.object[panel.currentMap][i].collision) {  //collision == true
+                                    entity.collisionOn = true;
+                                }
+                                if (player) {                     //player == true
+                                    objectIndex = i;
+                                }
                             }
                         }
                     }
-                    case "RIGHT" -> {
-                        entity.Area.x += entity.Speed;
-                        if (entity.Area.intersects(panel.object[panel.currentMap][i].Area)) {
-                            if (panel.object[panel.currentMap][i].collision) {  //collision == true
-                                entity.collisionOn = true;
-                            }
-                            if (player) {                     //player == true
-                                objectIndex = i;
-                            }
-                        }
-                    }
-                } //This methode works better on objects than tiles, because there are to many tiles and just a few objects.
+                }//This methode works better on objects than tiles, because there are to many tiles and just a few objects.
                   //If we'd use this method and check every tile for each direction, it would take more time and can cause problems
 
-                //reset Areas -> otherwise entity.MapX and entity.MapY keep increasing (Line 99 & 100)
+                else {
+                    // Check for nearby objects when standing still
+                    if (isNearObject(entity, panel.object[panel.currentMap][i])) {
+                        if (player) {
+                            objectIndex = i;
+                        }
+                    }
+                }
+
+                    //reset Areas -> otherwise entity.MapX and entity.MapY keep increasing
                 entity.Area.x = entity.AreaDefaultX;
                 entity.Area.y = entity.AreaDefaultY;
                 panel.object[panel.currentMap][i].Area.x = panel.object[panel.currentMap][i].AreaDefaultX;
@@ -169,6 +182,17 @@ public class CollisionDetection {
             }
         }
         return objectIndex;       //return index
+    }
+
+    private boolean isNearObject(Entity entity, Entity object) {
+        int proximity = 5; // Adjust this value based on how close you want to check
+
+        // Create an expanded area around the player's current area
+        Rectangle expandedArea = new Rectangle(entity.Area);
+        expandedArea.grow(proximity, proximity);
+
+        // Check if the expanded area intersects with the object's area
+        return expandedArea.intersects(object.Area);
     }
 
     // NPC DETECTION
@@ -187,36 +211,45 @@ public class CollisionDetection {
                 target[panel.currentMap][i].Area.y = target[panel.currentMap][i].MapY + target[panel.currentMap][i].Area.y;
 
 
-                switch (entity.direction) {
-                    case "UP" -> {
-                        entity.Area.y -= entity.Speed;      //when going UP -> Y-Coordinate - Speed (4 px)
+                if(!entity.still) {
+                    switch (entity.direction) {
+                        case "UP" -> {
+                            entity.Area.y -= entity.Speed;      //when going UP -> Y-Coordinate - Speed (4 px)
 
-                        //automatically checks if entity.Area & target[panel.currentMap][i].Area have intersection
-                        if (entity.Area.intersects(target[panel.currentMap][i].Area)) {     //A intersection B
-                            entity.collisionOn = true;  //then collision is happening
-                            entityIndex = i;                  //if it is player, we return the index, if it is an NPC we ignore
+                            //automatically checks if entity.Area & target[panel.currentMap][i].Area have intersection
+                            if (entity.Area.intersects(target[panel.currentMap][i].Area)) {     //A intersection B
+                                entity.collisionOn = true;  //then collision is happening
+                                entityIndex = i;                  //if it is player, we return the index, if it is an NPC we ignore
+                            }
+                        }
+                        case "DOWN" -> {
+                            entity.Area.y += entity.Speed;
+                            if (entity.Area.intersects(target[panel.currentMap][i].Area)) {
+                                entity.collisionOn = true;
+                                entityIndex = i;
+                            }
+                        }
+                        case "LEFT" -> {
+                            entity.Area.x -= entity.Speed;
+                            if (entity.Area.intersects(target[panel.currentMap][i].Area)) {
+                                entity.collisionOn = true;
+                                entityIndex = i;
+                            }
+                        }
+                        case "RIGHT" -> {
+                            entity.Area.x += entity.Speed;
+                            if (entity.Area.intersects(target[panel.currentMap][i].Area)) {
+                                entity.collisionOn = true;
+                                entityIndex = i;
+                            }
                         }
                     }
-                    case "DOWN" -> {
-                        entity.Area.y += entity.Speed;
-                        if (entity.Area.intersects(target[panel.currentMap][i].Area)) {
-                            entity.collisionOn = true;
+                }
+
+                else {
+                    // Check for nearby objects when standing still
+                    if (isNearNPC(entity, target[panel.currentMap][i])) {
                             entityIndex = i;
-                        }
-                    }
-                    case "LEFT" -> {
-                        entity.Area.x -= entity.Speed;
-                        if (entity.Area.intersects(target[panel.currentMap][i].Area)) {
-                            entity.collisionOn = true;
-                            entityIndex = i;
-                        }
-                    }
-                    case "RIGHT" -> {
-                        entity.Area.x += entity.Speed;
-                        if (entity.Area.intersects(target[panel.currentMap][i].Area)) {
-                            entity.collisionOn = true;
-                            entityIndex = i;
-                        }
                     }
                 }
 
@@ -228,6 +261,18 @@ public class CollisionDetection {
             }
         }
         return entityIndex;       //return index
+    }
+
+    private boolean isNearNPC(Entity entity, Entity npc) {
+        int proximity = 5; // Adjust this value based on how close you want to check
+
+        // Create an expanded area around the player's current area
+        Rectangle expandedArea = new Rectangle(entity.Area);
+        expandedArea.grow(proximity, proximity);
+
+        // Check if the expanded area intersects with the npc's area
+
+        return expandedArea.intersects(npc.Area);
     }
 
     // PLAYER DETECTION
@@ -336,4 +381,7 @@ public class CollisionDetection {
         panel.player.Area.y = panel.player.AreaDefaultY;
 
     }
+
+    // OBJECT DETECTION
 }
+

@@ -391,7 +391,7 @@ public class Handler implements KeyListener {
 
             if(keyCode == KeyEvent.VK_S) {
                // panel.playSoundEffect(5);
-                if(y >= -1212) y -= 12;
+                if(y >= -1600) y -= 12;
             }
 
         }

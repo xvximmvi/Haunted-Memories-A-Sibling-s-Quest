@@ -109,6 +109,8 @@ public class Entity {
     public int DeathCounter = 0;
     public boolean knockBack = false;
     int knockBackCounter = 0;
+    public boolean still = true;
+
 
 
     public Entity(GamePanel gamePanel) {
@@ -563,8 +565,8 @@ public class Entity {
         switch (user.direction) {
             case "UP" -> nextMapY = user.getTopY()-1;
             case "DOWN" -> nextMapY = user.getBottomY()+1;
-            case "LEFT" -> nextMapY = user.getLeftX()-1;
-            case "RIGHT" -> nextMapY = user.getRightX()+1;
+            case "LEFT" -> nextMapX = user.getLeftX()-1;
+            case "RIGHT" -> nextMapX = user.getRightX()+1;
         }
 
         int col = nextMapX / gamePanel.tileSize;

@@ -779,10 +779,26 @@ public class UserInterface {
 
 
 
-                Gameplay by
+                Level Design by
 
                 Klea Kupi-Herbst
                 Kevin Schmid
+
+
+
+
+
+                Story by
+
+                Klea Kupi-Herbst
+                Kevin Schmid
+
+
+
+
+
+                Special Thanks to our Game Tester
+                Caeser G. Ataschi
 
 
 

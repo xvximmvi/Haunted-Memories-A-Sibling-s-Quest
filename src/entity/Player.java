@@ -160,6 +160,7 @@ public class Player  extends Entity {
                     if (handler.DOWN) direction = "DOWN";
                     if (handler.LEFT) direction = "LEFT";
                     if (handler.RIGHT) direction = "RIGHT";
+                    still = false;
 
 
                     // COLLISION DETECTION -------------------------------------------------------------------------------------
@@ -198,7 +199,19 @@ public class Player  extends Entity {
                         else if (spriteNum == 4) spriteNum = 1;
                         spriteCounter = 0;          //Reset spriteCounter
                     }
-                } else spriteNum = 1;               //if He stops moving -> go to basic position (Standing Position 2)
+                } else {
+                    still = true;
+                    // CHECK OBJECT COLLISION
+                    int objectIndex = gamePanel.collisionDetection.DetectObject(this, true);
+                    InteractionObject(objectIndex);     //interaction with object
+
+                    // CHECK NPC COLLISION
+                    int NPCIndex = gamePanel.collisionDetection.DetectEntity(this, gamePanel.NPC);
+                    InteractionNPC(NPCIndex);
+                    contactBoss(NPCIndex);
+
+                    spriteNum = 1;               //if He stops moving -> go to basic position (Standing Position 2)
+                }
             }
 
             // This needs to be outside of key if statement!
