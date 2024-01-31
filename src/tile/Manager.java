@@ -25,11 +25,19 @@ public class Manager {
         mapTilesNum = new int[panel.maxMap][panel.maxMapCol][panel.maxMapRow];     //[panel.maxScreenCol][panel.maxScreenRow] -> Map Size as Screen Size
         //Edit: now maxMapCol/Row -> Map Size
 
-        tileImage();                            //call tileImage()
+        tileImage();//call tileImage()
+
+        // HOSPITAL -------------------------------------------------------------------------------------------------------------------
+        // F3
         loadMap("/Maps/Hospital/ICU.txt", 0);     //call loadMap() of first Map (Simbas Patient Room)
         loadMap("/Maps/Hospital/3F_Hall.txt", 1);
         loadMap("/Maps/Hospital/Toilet_Blue.txt", 2);
         loadMap("/Maps/Hospital/Toilet_Green.txt", 3);
+        loadMap("/Maps/Hospital/Apothecary.txt", 4);
+        loadMap("/Maps/Hospital/StorageF3.txt", 5);
+        loadMap("/Maps/Hospital/Office.txt", 6);
+
+        // F2
     }
 
     // TILE IMAGE

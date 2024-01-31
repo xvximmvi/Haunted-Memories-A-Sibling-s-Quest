@@ -562,20 +562,26 @@ public class Entity {
         int nextMapX = user.getLeftX();
         int nextMapY = user.getTopY();
 
+
         switch (user.direction) {
-            case "UP" -> nextMapY = user.getTopY()-1;
-            case "DOWN" -> nextMapY = user.getBottomY()+1;
-            case "LEFT" -> nextMapX = user.getLeftX()-1;
-            case "RIGHT" -> nextMapX = user.getRightX()+1;
+            case "UP" -> nextMapY = user.getTopY()-5;
+            case "DOWN" -> nextMapY = user.getBottomY()+5;
+            case "LEFT" -> nextMapX = user.getLeftX()-5;
+            case "RIGHT" -> nextMapX = user.getRightX()+5;
         }
 
-        int col = nextMapX / gamePanel.tileSize;
-        int row = nextMapY / gamePanel.tileSize;
 
-        for(int i = 0; i < target[1].length; i++) {
-            if(target[gamePanel.currentMap][i] != null) {
-                if(target[gamePanel.currentMap][i].getCol() == col &&
-                        target[gamePanel.currentMap][i].getRow() == row &&
+
+        // Check if the nextMapX/Y is within the area of the targeted entity
+        for (int i = 0; i < target[1].length; i++) {
+            if (target[gamePanel.currentMap][i] != null) {
+                int targetTopY = target[gamePanel.currentMap][i].getTopY();
+                int targetBottomY = target[gamePanel.currentMap][i].getBottomY();
+                int targetLeftX = target[gamePanel.currentMap][i].getLeftX();
+                int targetRightX = target[gamePanel.currentMap][i].getRightX();
+
+                if (nextMapY >= targetTopY - 5 && nextMapY <= targetBottomY + 5 &&
+                        nextMapX >= targetLeftX - 5 && nextMapX <= targetRightX + 5 &&
                         target[gamePanel.currentMap][i].name.equals(targetName)) {
                     index = 1;
                     break;
@@ -583,6 +589,17 @@ public class Entity {
             }
         }
         return index;
+    }
+
+    private boolean isNearObject(Entity entity, Entity object) {
+        int proximity = 5; // Adjust this value based on how close you want to check
+
+        // Create an expanded area around the player's current area
+        Rectangle expandedArea = new Rectangle(entity.Area);
+        expandedArea.grow(proximity, proximity);
+
+        // Check if the expanded area intersects with the object's area
+        return expandedArea.intersects(object.Area);
     }
 
 }

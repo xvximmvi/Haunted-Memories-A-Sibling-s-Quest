@@ -161,13 +161,15 @@ public class UserInterface {
                 graphics2D.setColor(Color.BLACK);
                 graphics2D.drawString("Move: WASD", panel.tileSize+2, panel.tileSize+2);
                 graphics2D.drawString("Interact: E", panel.tileSize+2, panel.tileSize + 30+2);
-                graphics2D.drawString("Option: O", panel.tileSize+2, panel.tileSize + 60+2);
-                graphics2D.drawString("Pause/Play: P", panel.tileSize+2, panel.tileSize + 90+2);
+                graphics2D.drawString("Inventory: I", panel.tileSize+2, panel.tileSize + 60+2);
+                graphics2D.drawString("Option: O", panel.tileSize+2, panel.tileSize + 90+2);
+                graphics2D.drawString("Pause / Play: P", panel.tileSize+2, panel.tileSize + 120+2);
                 graphics2D.setColor(Color.WHITE);
                 graphics2D.drawString("Move: WASD", panel.tileSize, panel.tileSize);
                 graphics2D.drawString("Interact: E", panel.tileSize, panel.tileSize + 30);
-                graphics2D.drawString("Option: O", panel.tileSize, panel.tileSize + 60);
-                graphics2D.drawString("Pause/Play: P", panel.tileSize, panel.tileSize + 90);
+                graphics2D.drawString("Inventory: I", panel.tileSize+2, panel.tileSize + 60);
+                graphics2D.drawString("Option: O", panel.tileSize+2, panel.tileSize + 90);
+                graphics2D.drawString("Pause / Play: P", panel.tileSize+2, panel.tileSize + 120);
 
                 TutorialCounter++;
                 if (TutorialCounter > 420) {   //240 Frames (60 Frames per sec -> 4 sec)
@@ -201,9 +203,10 @@ public class UserInterface {
                 graphics2D.drawString("Block: K", panel.tileSize, panel.tileSize + 30+40);
 
                 TutorialCounter++;
-                if (TutorialCounter > 300) {
+                if (TutorialCounter > 240) {
                     TutorialCounter = 0;
                     Boss = false;
+                    Boss2 = true;
                 }
             }
             else if (Boss2) {

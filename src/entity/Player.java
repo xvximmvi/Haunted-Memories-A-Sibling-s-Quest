@@ -2,14 +2,11 @@ package entity;
 
 import main.GamePanel;
 import main.Handler;
-import object.General.GENERAL_Card_2;
 import object.Hospital.HOSPITAL_Medication;
-import object.Hospital.HOSPITAL_Scalpel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Player  extends Entity {
     Handler handler;
@@ -294,6 +291,19 @@ public class Player  extends Entity {
                                         gamePanel.playSoundEffect(3);
                                         switchMap(3, 24, 17, "LEFT");
                                     }
+                                }
+                                case "Door_Lock_Right" -> {
+                                    if (MapX < 20*gamePanel.tileSize) {
+                                        gamePanel.playSoundEffect(3);
+                                        switchMap(4, 15, 21, "UP");
+                                    } else {
+                                        gamePanel.playSoundEffect(3);
+                                        switchMap(6, 15, 21, "UP");
+                                    }
+                                }
+                                case "Door" -> {
+                                    gamePanel.playSoundEffect(3);
+                                    switchMap(5, 15, 21, "UP");
                                 }
                             }
                         }

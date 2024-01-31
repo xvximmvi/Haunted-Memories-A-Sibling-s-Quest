@@ -126,6 +126,5 @@ public class SetAsset {
         setNPC(new ArcadeEmployee(panel), panel.tileSize*12, panel.tileSize*15, 3,0);
         setNPC(new NPC_Doctor_Female_1(panel), panel.tileSize*12, panel.tileSize*12, 0,1);
         setNPC(new NPC_Doctor_Female_1(panel), panel.tileSize*4, panel.tileSize*5, 1,2);
-
     }
 }

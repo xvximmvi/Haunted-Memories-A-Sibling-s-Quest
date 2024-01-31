@@ -183,7 +183,6 @@ public class CollisionDetection {
         }
         return objectIndex;       //return index
     }
-
     private boolean isNearObject(Entity entity, Entity object) {
         int proximity = 5; // Adjust this value based on how close you want to check
 
@@ -262,7 +261,6 @@ public class CollisionDetection {
         }
         return entityIndex;       //return index
     }
-
     private boolean isNearNPC(Entity entity, Entity npc) {
         int proximity = 5; // Adjust this value based on how close you want to check
 
@@ -381,7 +379,5 @@ public class CollisionDetection {
         panel.player.Area.y = panel.player.AreaDefaultY;
 
     }
-
-    // OBJECT DETECTION
 }
 
