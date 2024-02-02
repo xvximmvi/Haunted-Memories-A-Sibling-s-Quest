@@ -1153,16 +1153,17 @@ public class UserInterface {
             if (TransitionCounter >= 30) {   //when reached certain point
 
                 panel.currentMap = panel.TransitionMap;                         // Which Map to Switch to
-                if (panel.TransitionMap == 0)
-                    panel.asset.setObject_HOSPITAL_ICU();   //Set object to corresponding map
+                if (panel.TransitionMap == 0) panel.asset.setObject_HOSPITAL_ICU();   //Set object to corresponding map
                 if (panel.TransitionMap == 1) panel.asset.setObject_HOSPITAL_HALL3F();
                 if (panel.TransitionMap == 2) panel.asset.setObject_HOSPITAL_TOILET();
                 if (panel.TransitionMap == 3) panel.asset.setObject_HOSPITAL_TOILET();
 
+                if (panel.TransitionMap == 5) panel.asset.setObject_HOSPITAL_STORAGEF3();
+
                 panel.player.direction = panel.TransitionDirection;
 
-                panel.player.MapX = panel.tileSize * panel.TransitionX - (panel.tileSize / 2);     // X-Coordinate of Spawn point
-                panel.player.MapY = panel.tileSize * panel.TransitionY - (panel.tileSize / 2);     // Y-Coordinate of Spawn point
+                panel.player.MapX = panel.tileSize * panel.TransitionX - (panel.tileSize / 2) + panel.OffsetX;     // X-Coordinate of Spawn point
+                panel.player.MapY = panel.tileSize * panel.TransitionY - (panel.tileSize / 2) + panel.OffsetY;     // Y-Coordinate of Spawn point
 
                 TransitionCounter = 0;    //set counter back to zero for next Transition
                 panel.GameState = panel.transitionOutState;

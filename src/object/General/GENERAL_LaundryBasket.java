@@ -12,7 +12,13 @@ public class GENERAL_LaundryBasket extends Entity {
         ObjectWidth = 48*2+24;
         ObjectHeight = 43*2+21;
 
-        Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+        Area.width = ObjectWidth;
+        Area.height = ObjectHeight/2+35;
+        Area.x = 0;
+        Area.y = ObjectHeight-Area.height;
+        AreaDefaultX = Area.x;
+        AreaDefaultY = Area.y;
+        //Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
         DOWN1 = setup("/Objects/General/" + name + ".png", ObjectWidth, ObjectHeight);
 
         collision = true;

@@ -12,7 +12,13 @@ public class GENERAL_Box_3_White extends Entity {
         ObjectWidth = 28*2+14;
         ObjectHeight = 64*2+32;
 
-        Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
+        Area.width = ObjectWidth;
+        Area.height = ObjectHeight/2-10;
+        Area.x = 0;
+        Area.y = ObjectHeight-Area.height;
+        AreaDefaultX = Area.x;
+        AreaDefaultY = Area.y;
+        //Area = new Rectangle(0, ObjectHeight/2, ObjectWidth, ObjectHeight-(ObjectHeight/2));
         DOWN1 = setup("/Objects/General/" + name + ".png", ObjectWidth, ObjectHeight);
 
         collision = true;

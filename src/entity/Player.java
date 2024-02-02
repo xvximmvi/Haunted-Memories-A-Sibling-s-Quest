@@ -67,8 +67,11 @@ public class Player  extends Entity {
     }
 
     public void setDefaultValues() {
-        MapX = gamePanel.tileSize*13;       //Begin next to Simbas ICU Bed
-        MapY = gamePanel.tileSize*18+24;
+        /*MapX = gamePanel.tileSize*13;       //Begin next to Simbas ICU Bed
+        MapY = gamePanel.tileSize*18+24;*/
+
+        MapX = gamePanel.tileSize*13+ gamePanel.tileSize/2;       //Begin next to Simbas ICU Bed
+        MapY = gamePanel.tileSize*19;
 
         attack = 1;
         defense = 0;
@@ -135,7 +138,6 @@ public class Player  extends Entity {
         if(!Dead) {
             if(gamePanel.NPC[3][0] != null) {
                 BOSS_FIGHT = gamePanel.currentMap == 3;
-                gamePanel.ui.Boss = gamePanel.currentMap == 3;
             }
 
             if(gamePanel.GameState == gamePanel.inventoryState) {
@@ -243,7 +245,7 @@ public class Player  extends Entity {
                                     //gamePanel.playSoundEffect(4);
                                      if(GiveMeds) {
                                          gamePanel.playSoundEffect(3);
-                                         switchMap(1, 2, 25, "RIGHT");
+                                         switchMap(1, 2, 25, "RIGHT",0 ,0);
                                      } else {
                                          if(d == 0) {
                                              gamePanel.object[gamePanel.currentMap][index].dialogues[0][0] = "I can't leave that poor guy alone! I need to help him.";
@@ -286,24 +288,24 @@ public class Player  extends Entity {
                                 case "Door_Right" -> {
                                     if (MapY > 18*gamePanel.tileSize) {
                                         gamePanel.playSoundEffect(3);
-                                        switchMap(0, 20, 10, "DOWN");
+                                        switchMap(0, 20, 10, "DOWN",0 ,0);
                                     } else {
                                         gamePanel.playSoundEffect(3);
-                                        switchMap(3, 24, 17, "LEFT");
+                                        switchMap(3, 24, 17, "LEFT",0 ,0);
                                     }
                                 }
                                 case "Door_Lock_Right" -> {
                                     if (MapX < 20*gamePanel.tileSize) {
                                         gamePanel.playSoundEffect(3);
-                                        switchMap(4, 15, 21, "UP");
+                                        switchMap(4, 15, 21, "UP", 0, 0);
                                     } else {
                                         gamePanel.playSoundEffect(3);
-                                        switchMap(6, 15, 21, "UP");
+                                        switchMap(6, 15, 21, "UP",0 ,0);
                                     }
                                 }
                                 case "Door" -> {
                                     gamePanel.playSoundEffect(3);
-                                    switchMap(5, 15, 21, "UP");
+                                    switchMap(5, 13, 19, "UP", gamePanel.tileSize, 0);
                                 }
                             }
                         }
@@ -311,7 +313,7 @@ public class Player  extends Entity {
                             switch (ObjectName) {
                                 case "Door_Left" -> {
                                     gamePanel.playSoundEffect(3);
-                                    switchMap(1, 2, 16, "RIGHT");
+                                    switchMap(1, 2, 16, "RIGHT", 0, 0);
                                 }
                             }
                         }
@@ -394,12 +396,19 @@ public class Player  extends Entity {
     }
 
     // SWITCH ROOMS/MAPS
-    public void switchMap(int Map, int x, int y, String direction) {
+    public void switchMap(int Map, int x, int y, String direction, int ox, int oy) {
         gamePanel.TransitionMap = Map;
         gamePanel.TransitionX = x;
         gamePanel.TransitionY = y;
+        gamePanel.OffsetX = ox;
+        gamePanel.OffsetY = oy;
         gamePanel.TransitionDirection = direction;
         gamePanel.GameState = gamePanel.transitionState;
+
+        if(Map == 3)
+            if(gamePanel.NPC[3][0] != null)
+                gamePanel.ui.Boss = true;
+
     }
 
     public void draw(Graphics2D graphics2d) {
@@ -503,14 +512,15 @@ public class Player  extends Entity {
 
     public void resetGame() {
 
-        gamePanel.asset.setObject_HOSPITAL_ICU();
+        //gamePanel.asset.setObject_HOSPITAL_ICU();
+        gamePanel.asset.setObject_HOSPITAL_STORAGEF3();
         gamePanel.asset.setNPCs();
         setDefaultValues();
 
         Dead = false;
         Alive = true;
 
-        gamePanel.currentMap = 0;
+        gamePanel.currentMap = 5;
 
         d=0;
 

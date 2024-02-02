@@ -112,7 +112,6 @@ public class Entity {
     public boolean still = true;
 
 
-
     public Entity(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
     }
@@ -133,13 +132,8 @@ public class Entity {
         return scaledImage;
     }
 
-    public void Action() {
-
-
-    }
-    public void Speak(){
-
-    }
+    public void Action() {}
+    public void Speak(){}
 
     public void startDialogue(Entity entity, int setNum){
         gamePanel.GameState = gamePanel.dialogueState;
@@ -344,11 +338,6 @@ public class Entity {
             Area.width = AttackArea.width;
             Area.height = AttackArea.height;
 
-            /*if(Boss)
-                if(Attack)
-                    if(collisionPlayer)
-                        damagePlayer(attack);*/
-
             if(!Boss) {
                 // Check Enemy/NPC collision with the updated MapX, MapY and Area
                 int EnemyIndex = gamePanel.collisionDetection.DetectEntity(this, gamePanel.NPC);
@@ -550,9 +539,6 @@ public class Entity {
     public int getRightX(){ return MapX + Area.x + Area.width;}
     public int getTopY(){ return MapY + Area.y;}
     public int getBottomY(){ return MapY + Area.y + Area.height;}
-    public int getCol() {return (MapX + Area.x)/ gamePanel.tileSize;}
-    public int getRow() {return (MapY + Area.y)/ gamePanel.tileSize;}
-
 
     public boolean use(Entity entity) {return false;}
     public int getDetect(Entity user, Entity[][] target, String targetName) {
@@ -569,7 +555,6 @@ public class Entity {
             case "LEFT" -> nextMapX = user.getLeftX()-5;
             case "RIGHT" -> nextMapX = user.getRightX()+5;
         }
-
 
 
         // Check if the nextMapX/Y is within the area of the targeted entity
@@ -590,16 +575,4 @@ public class Entity {
         }
         return index;
     }
-
-    private boolean isNearObject(Entity entity, Entity object) {
-        int proximity = 5; // Adjust this value based on how close you want to check
-
-        // Create an expanded area around the player's current area
-        Rectangle expandedArea = new Rectangle(entity.Area);
-        expandedArea.grow(proximity, proximity);
-
-        // Check if the expanded area intersects with the object's area
-        return expandedArea.intersects(object.Area);
-    }
-
 }

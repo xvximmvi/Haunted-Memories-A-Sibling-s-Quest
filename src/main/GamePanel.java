@@ -30,7 +30,7 @@ public class GamePanel extends JPanel implements Runnable{
     public int maxMapRow = 30;
     public int MapWidth = tileSize*maxMapCol;
     public int MapHeight = tileSize*maxMapRow;
-    public int TransitionMap, TransitionX, TransitionY;
+    public int TransitionMap, TransitionX, TransitionY, OffsetX, OffsetY;
     public String TransitionDirection;
 
     // FPS

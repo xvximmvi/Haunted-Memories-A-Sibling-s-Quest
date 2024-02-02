@@ -109,6 +109,21 @@ public class SetAsset {
 
         setObjects(new HOSPITAL_Door_Left(panel), 24* panel.tileSize+36, 16* panel.tileSize,3,10);
     }
+    public void setObject_HOSPITAL_STORAGEF3(){
+        setObjects(new HOSPITAL_Door_Bottom(panel), 13*panel.tileSize, 21* panel.tileSize- panel.tileSize/2,5,0);
+        setObjects(new GENERAL_WashingMachines(panel), 12*panel.tileSize+40, 12* panel.tileSize+20, 5, 1);
+        setObjects(new GENERAL_Sink(panel), 16* panel.tileSize, 12* panel.tileSize, 5, 2);
+        setObjects(new GENERAL_Locker(panel), 9* panel.tileSize+40, 11* panel.tileSize+20, 5, 3);
+        setObjects(new GENERAL_CleaningStuff_1(panel),12* panel.tileSize-20, 11* panel.tileSize, 5, 4);
+        setObjects(new GENERAL_LaundryBasket(panel), 11* panel.tileSize, 15* panel.tileSize,5 ,5);
+        setObjects(new GENERAL_Box_3_White(panel),10 * panel.tileSize-40, 17* panel.tileSize+30, 5, 6);
+        setObjects(new GENERAL_Vent_Small_Round(panel), 18* panel.tileSize, 10* panel.tileSize+20, 5, 7);
+        setObjects(new HOSPITAL_Chair_B(panel), 16* panel.tileSize +40, 18* panel.tileSize +40, 5, 8);
+        setObjects(new GENERAL_FireExtinguisher_2(panel), 18* panel.tileSize, 15* panel.tileSize, 5, 9);
+        setObjects(new GENERAL_SpiderWeb_Full(panel), 9* panel.tileSize, 10* panel.tileSize, 5, 10);
+        setObjects(new HOSPITAL_Tissues(panel), 16* panel.tileSize, 17* panel.tileSize, 5, 11);
+        setObjects(new HOSPITAL_Tissues(panel), 14 * panel.tileSize-40, 14* panel.tileSize+10, 5, 12);
+    }
 
 
     // SET NPC ---------------------------------------------------------------------------------------------------------
