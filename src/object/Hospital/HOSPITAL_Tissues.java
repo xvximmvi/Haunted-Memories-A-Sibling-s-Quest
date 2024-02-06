@@ -16,5 +16,6 @@ public class HOSPITAL_Tissues extends Entity {
         DOWN1 = setup("/Objects/Hospital/" + name + ".png", ObjectWidth, ObjectHeight);
 
         collision = false;
+
     }
 }

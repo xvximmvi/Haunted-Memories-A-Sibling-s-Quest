@@ -176,7 +176,7 @@ public class GamePanel extends JPanel implements Runnable{
             // OBJECT (Objects on floor with no collision which have (almost) same layer-level as Tile)
             // -> no need to add to ArrayList because the layer-level stays the same at every direction of approach
             for(int i = 0; i < object[1].length; i++)
-                if(object[currentMap][i] != null && !object[currentMap][i].collision)
+                if(object[currentMap][i] != null && (!object[currentMap][i].collision || object[currentMap][i].BOTTOM) && !object[currentMap][i].TOP)
                     object[currentMap][i].draw(graphics2d);
 
             // PLAYER
@@ -189,8 +189,9 @@ public class GamePanel extends JPanel implements Runnable{
 
             // OBJECT
             for(int i = 0; i < object[1].length; i++)
-                if(object[currentMap][i] != null && object[currentMap][i].collision)
+                if(object[currentMap][i] != null && object[currentMap][i].collision && !object[currentMap][i].TOP && !object[currentMap][i].BOTTOM)
                     entityList.add(object[currentMap][i]);
+
 
             // SORT
             entityList.sort(Comparator.comparingInt(e -> e.MapY));
@@ -200,6 +201,11 @@ public class GamePanel extends JPanel implements Runnable{
 
             // EMPTY ENTITY LIST
             entityList.clear();
+
+            // DRAW OBJECTS OF TOP CATEGORY
+            for(int i = 0; i < object[1].length; i++)
+                if(object[currentMap][i] != null && object[currentMap][i].TOP)
+                    object[currentMap][i].draw(graphics2d);
 
             // UI
             ui.draw(graphics2d);

@@ -1159,6 +1159,7 @@ public class UserInterface {
                 if (panel.TransitionMap == 3) panel.asset.setObject_HOSPITAL_TOILET();
 
                 if (panel.TransitionMap == 5) panel.asset.setObject_HOSPITAL_STORAGEF3();
+                if (panel.TransitionMap == 6) panel.asset.setObject_HOSPITAL_OFFICE();
 
                 panel.player.direction = panel.TransitionDirection;
 

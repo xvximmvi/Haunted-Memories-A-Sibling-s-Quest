@@ -110,6 +110,8 @@ public class Entity {
     public boolean knockBack = false;
     int knockBackCounter = 0;
     public boolean still = true;
+    public boolean TOP = false;
+    public boolean BOTTOM = false;
 
 
     public Entity(GamePanel gamePanel) {

@@ -15,6 +15,6 @@ public class GENERAL_Paper_Ripped extends Entity {
         Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
         DOWN1 = setup("/Objects/General/" + name + ".png", ObjectWidth, ObjectHeight);
 
-        collision = true;
+        collision = false;
     }
 }

@@ -15,6 +15,7 @@ public class GENERAL_OfficeStuff_2 extends Entity {
         Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
         DOWN1 = setup("/Objects/General/" + name + ".png", ObjectWidth, ObjectHeight);
 
+        TOP = true;
         collision = true;
     }
 }

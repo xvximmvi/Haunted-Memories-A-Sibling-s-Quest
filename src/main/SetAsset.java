@@ -124,7 +124,32 @@ public class SetAsset {
         setObjects(new HOSPITAL_Tissues(panel), 16* panel.tileSize, 17* panel.tileSize, 5, 11);
         setObjects(new HOSPITAL_Tissues(panel), 14 * panel.tileSize-40, 14* panel.tileSize+10, 5, 12);
     }
-
+    public void setObject_HOSPITAL_OFFICE(){
+        setObjects(new HOSPITAL_Door_Bottom(panel), 14* panel.tileSize, 21* panel.tileSize- panel.tileSize/2, 6, 0);
+        setObjects(new GENERAL_OfficeShelf_1(panel), 8* panel.tileSize- panel.tileSize/2+4, 8* panel.tileSize, 6, 1);
+        setObjects(new GENERAL_Table_Small_White(panel), 13* panel.tileSize, 9* panel.tileSize+20, 6, 2);
+        setObjects(new GENERAL_Printer(panel), 17* panel.tileSize, 9* panel.tileSize+40, 6, 3);
+        setObjects(new GENERAL_CoffeeMaker(panel), 21* panel.tileSize+30, 8* panel.tileSize+40, 6, 4);
+        setObjects(new GENERAL_Clock_2(panel), 12* panel.tileSize+50, 8* panel.tileSize-30, 6, 5);
+        setObjects(new GENERAL_Desk_PC(panel), 15* panel.tileSize+40, 12* panel.tileSize+40, 6, 6);
+        setObjects(new GENERAL_Desk_PC(panel), 17* panel.tileSize+30, 16* panel.tileSize, 6, 7);
+        setObjects(new GENERAL_Desk_PC(panel), 10* panel.tileSize-30, 16* panel.tileSize, 6, 8);
+        setObjects(new GENERAL_ServerShelf_V(panel), 8* panel.tileSize-40, 12* panel.tileSize, 6, 9);
+        setObjects(new GENERAL_Plant_Long(panel), 21* panel.tileSize, 16* panel.tileSize-40, 6, 10);
+        setObjects(new GENERAL_DeskChair_B(panel), 16* panel.tileSize, 14* panel.tileSize+30, 6, 11);
+        setObjects(new GENERAL_DeskChair_B(panel), 18* panel.tileSize, 18* panel.tileSize, 6, 12);
+        setObjects(new GENERAL_DeskChair_R(panel), 10* panel.tileSize, 18* panel.tileSize-30, 6, 13);
+        setObjects(new GENERAL_OfficeShelf_Small_1(panel), 19* panel.tileSize, 12* panel.tileSize, 6, 14);
+        setObjects(new GENERAL_Wall_Office_Deco_1(panel), 15* panel.tileSize, 8* panel.tileSize-30, 6, 15);
+        setObjects(new GENERAL_OfficeStuff(panel), 8* panel.tileSize-15, 8* panel.tileSize-27,6 ,16);
+        setObjects(new GENERAL_Food(panel), 14* panel.tileSize+50, 9* panel.tileSize+18,6 ,17);
+        setObjects(new GENERAL_Plant_Short_1(panel), 10* panel.tileSize+50, 7* panel.tileSize+18,6 ,18);
+        setObjects(new GENERAL_Food_2(panel), 13* panel.tileSize+15, 9* panel.tileSize-12,6 ,19);
+        setObjects(new GENERAL_Paper_Bin_Knocked(panel), 13* panel.tileSize, 16* panel.tileSize,6 ,20);
+        setObjects(new GENERAL_Paper_1(panel), 11* panel.tileSize, 12* panel.tileSize-40, 6,21);
+        setObjects(new GENERAL_Paper_Ripped(panel), 20 * panel.tileSize- panel.tileSize/2, 10* panel.tileSize, 6, 22);
+        setObjects(new GENERAL_Wall_Office_Deco_2(panel), 18* panel.tileSize+50, 8* panel.tileSize-30, 6, 23);
+    }
 
     // SET NPC ---------------------------------------------------------------------------------------------------------
     // SET NPC UTILITY

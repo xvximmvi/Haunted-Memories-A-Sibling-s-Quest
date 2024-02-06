@@ -67,11 +67,11 @@ public class Player  extends Entity {
     }
 
     public void setDefaultValues() {
-        /*MapX = gamePanel.tileSize*13;       //Begin next to Simbas ICU Bed
-        MapY = gamePanel.tileSize*18+24;*/
+        MapX = gamePanel.tileSize*13;       //Begin next to Simbas ICU Bed
+        MapY = gamePanel.tileSize*18+24;
 
-        MapX = gamePanel.tileSize*13+ gamePanel.tileSize/2;       //Begin next to Simbas ICU Bed
-        MapY = gamePanel.tileSize*19;
+        //MapX = gamePanel.tileSize*14+ gamePanel.tileSize/2;       //Begin next to Simbas ICU Bed
+        //MapY = gamePanel.tileSize*19;
 
         attack = 1;
         defense = 0;
@@ -297,10 +297,10 @@ public class Player  extends Entity {
                                 case "Door_Lock_Right" -> {
                                     if (MapX < 20*gamePanel.tileSize) {
                                         gamePanel.playSoundEffect(3);
-                                        switchMap(4, 15, 21, "UP", 0, 0);
+                                        switchMap(4, 15, 19, "UP", 0, 0);
                                     } else {
                                         gamePanel.playSoundEffect(3);
-                                        switchMap(6, 15, 21, "UP",0 ,0);
+                                        switchMap(6, 15, 19, "UP",0 ,0);
                                     }
                                 }
                                 case "Door" -> {
@@ -314,6 +314,30 @@ public class Player  extends Entity {
                                 case "Door_Left" -> {
                                     gamePanel.playSoundEffect(3);
                                     switchMap(1, 2, 16, "RIGHT", 0, 0);
+                                }
+                            }
+                        }
+                        case 4 -> {
+                            switch (ObjectName) {
+                                case "Door_Bottom" -> {
+                                    gamePanel.playSoundEffect(3);
+                                    switchMap(1, 16, 21, "DOWN", 0, gamePanel.tileSize/2);
+                                }
+                            }
+                        }
+                        case 5 -> {
+                            switch (ObjectName) {
+                                case "Door_Bottom" -> {
+                                    gamePanel.playSoundEffect(3);
+                                    switchMap(1, 21, 21, "DOWN", 0, gamePanel.tileSize/2);
+                                }
+                            }
+                        }
+                        case 6 -> {
+                            switch (ObjectName) {
+                                case "Door_Bottom" -> {
+                                    gamePanel.playSoundEffect(3);
+                                    switchMap(1, 26, 21, "DOWN", 0, gamePanel.tileSize/2);
                                 }
                             }
                         }
@@ -512,15 +536,15 @@ public class Player  extends Entity {
 
     public void resetGame() {
 
-        //gamePanel.asset.setObject_HOSPITAL_ICU();
-        gamePanel.asset.setObject_HOSPITAL_STORAGEF3();
+        gamePanel.asset.setObject_HOSPITAL_ICU();
+        //gamePanel.asset.setObject_HOSPITAL_OFFICE();
         gamePanel.asset.setNPCs();
         setDefaultValues();
 
         Dead = false;
         Alive = true;
 
-        gamePanel.currentMap = 5;
+        gamePanel.currentMap = 0;
 
         d=0;
 
