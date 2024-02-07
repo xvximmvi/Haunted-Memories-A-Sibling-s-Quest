@@ -537,7 +537,6 @@ public class Player  extends Entity {
     public void resetGame() {
 
         gamePanel.asset.setObject_HOSPITAL_ICU();
-        //gamePanel.asset.setObject_HOSPITAL_OFFICE();
         gamePanel.asset.setNPCs();
         setDefaultValues();
 

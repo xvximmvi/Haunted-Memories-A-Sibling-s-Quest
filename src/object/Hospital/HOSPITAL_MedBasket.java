@@ -16,6 +16,7 @@ public class HOSPITAL_MedBasket extends Entity {
         Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
         DOWN1 = setup("/Objects/Hospital/" + name + ".png", ObjectWidth, ObjectHeight);
 
+        TOP = true;
         collision = true;
     }
 }

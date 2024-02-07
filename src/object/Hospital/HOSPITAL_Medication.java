@@ -23,7 +23,7 @@ public class HOSPITAL_Medication extends Entity {
         Area = new Rectangle(0, 0, ObjectWidth, ObjectHeight);
         DOWN1 = setup("/Objects/Hospital/" + name + ".png", ObjectWidth, ObjectHeight);
 
-        collision = true;
+        collision = false;
         setDialogue();
     }
 

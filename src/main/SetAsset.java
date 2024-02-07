@@ -150,6 +150,44 @@ public class SetAsset {
         setObjects(new GENERAL_Paper_Ripped(panel), 20 * panel.tileSize- panel.tileSize/2, 10* panel.tileSize, 6, 22);
         setObjects(new GENERAL_Wall_Office_Deco_2(panel), 18* panel.tileSize+50, 8* panel.tileSize-30, 6, 23);
     }
+    public void setObject_HOSPITAL_APOTHECARY(){
+        setObjects(new HOSPITAL_Door_Bottom(panel), 14* panel.tileSize, 21* panel.tileSize- panel.tileSize/2, 4, 0);
+        setObjects(new HOSPITAL_Medication_Shelf_F(panel), 8* panel.tileSize- panel.tileSize/2+4, 8* panel.tileSize+panel.tileSize/4, 4, 1);
+        setObjects(new HOSPITAL_Medication_Shelf_F(panel), 10* panel.tileSize, 8* panel.tileSize+panel.tileSize/4, 4, 2);
+        setObjects(new HOSPITAL_MedicationShelf_White(panel), 20* panel.tileSize, 8* panel.tileSize-panel.tileSize/4,4 ,3);
+        setObjects(new HOSPITAL_Shelf_L(panel), 7* panel.tileSize+15, 17* panel.tileSize-40, 4, 4);
+        setObjects(new HOSPITAL_LungImage_T(panel), panel.tileSize*12+40, panel.tileSize*8,4,5);
+        setObjects(new HOSPITAL_LungImage_B(panel), panel.tileSize*12+40, panel.tileSize*8+(24*2+12),4,6);
+        setObjects(new GENERAL_Desk_PC(panel), 17* panel.tileSize+30, 13* panel.tileSize, 4, 7);
+        setObjects(new GENERAL_DeskChair_B(panel), 18* panel.tileSize, 15* panel.tileSize, 4, 8);
+        setObjects(new GENERAL_Table_Big_White(panel), 9* panel.tileSize+panel.tileSize/2, 12* panel.tileSize+panel.tileSize/2, 4, 9);
+        setObjects(new GENERAL_Table_Small_White(panel), 14* panel.tileSize-10, 9* panel.tileSize+20, 4, 10);
+        setObjects(new HOSPITAL_MedKit_Green_Wall(panel), 17* panel.tileSize+panel.tileSize/2, 8* panel.tileSize,4, 11);
+        setObjects(new HOSPITAL_MedKit_Red_Wall(panel), 18* panel.tileSize+panel.tileSize/2, 8* panel.tileSize,4, 12);
+        setObjects(new HOSPITAL_IV_Stand(panel), 21* panel.tileSize+panel.tileSize/2, 18* panel.tileSize-panel.tileSize/2, 4, 13);
+        setObjects(new HOSPITAL_Clock(panel), 15* panel.tileSize, 8* panel.tileSize-panel.tileSize/4, 4, 14);
+        setObjects(new HOSPITAL_TalkLight(panel), panel.tileSize*7+panel.tileSize/2, panel.tileSize*7+panel.tileSize/2, 4, 15);
+        setObjects(new HOSPITAL_Chair_B(panel), 17* panel.tileSize+panel.tileSize/2+10, 18* panel.tileSize+50, 4, 16);
+        setObjects(new HOSPITAL_Chair_B(panel), 19* panel.tileSize, 18* panel.tileSize+50, 4, 17);
+        setObjects(new GENERAL_Plant_Long_2(panel), 21* panel.tileSize+panel.tileSize/2, 12* panel.tileSize, 4, 18);
+        setObjects(new HOSPITAL_Medication(panel), 7* panel.tileSize+20, 19* panel.tileSize+20, 4, 19);
+        setObjects(new HOSPITAL_MedBasket(panel), 14* panel.tileSize+15, 9* panel.tileSize+30, 4, 20);
+        setObjects(new HOSPITAL_MedKit_White(panel), 15* panel.tileSize+10, 9* panel.tileSize+15, 4, 21);
+        setObjects(new GENERAL_Laptop_L(panel), 12* panel.tileSize-25, 12* panel.tileSize+20, 4, 22);
+        setObjects(new HOSPITAL_Tissues(panel), 16* panel.tileSize+10, 11* panel.tileSize+15, 4, 23);
+        setObjects(new HOSPITAL_MedStuff_1(panel), 10* panel.tileSize-10, 13* panel.tileSize- panel.tileSize/2+10, 4, 24);
+        setObjects(new HOSPITAL_MedStuff_2(panel), 11* panel.tileSize-10, 14* panel.tileSize- panel.tileSize/2, 4, 25);
+        setObjects(new HOSPITAL_Chair_L(panel), 16* panel.tileSize, 14* panel.tileSize,4, 26);
+        setObjects(new HOSPITAL_Tissues(panel), 16* panel.tileSize+50, 16* panel.tileSize-30, 4, 27);
+        setObjects(new HOSPITAL_Medication(panel), 11* panel.tileSize, 12* panel.tileSize-60, 4, 28);
+        setObjects(new GENERAL_Printer(panel), 10* panel.tileSize, 18* panel.tileSize+30, 4, 29);
+
+
+
+
+
+
+    }
 
     // SET NPC ---------------------------------------------------------------------------------------------------------
     // SET NPC UTILITY
