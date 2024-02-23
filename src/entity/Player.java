@@ -70,9 +70,6 @@ public class Player  extends Entity {
         MapX = gamePanel.tileSize*13;       //Begin next to Simbas ICU Bed
         MapY = gamePanel.tileSize*18+24;
 
-        //MapX = gamePanel.tileSize*14+ gamePanel.tileSize/2;       //Begin next to Simbas ICU Bed
-        //MapY = gamePanel.tileSize*19;
-
         attack = 1;
         defense = 0;
         AttackSpeed = 10;

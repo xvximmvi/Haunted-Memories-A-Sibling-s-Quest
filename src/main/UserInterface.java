@@ -193,35 +193,6 @@ public class UserInterface {
                     Goal = false;
                 }
             }
-            else if (Boss) {
-                graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 20F));
-                graphics2D.setColor(Color.BLACK);
-                graphics2D.drawString("Hit: J", panel.tileSize+2, panel.tileSize+2+40);
-                graphics2D.drawString("Block: K", panel.tileSize+2, panel.tileSize + 30+2+40);
-                graphics2D.setColor(Color.WHITE);
-                graphics2D.drawString("Hit: J", panel.tileSize, panel.tileSize+40);
-                graphics2D.drawString("Block: K", panel.tileSize, panel.tileSize + 30+40);
-
-                TutorialCounter++;
-                if (TutorialCounter > 240) {
-                    TutorialCounter = 0;
-                    Boss = false;
-                    Boss2 = true;
-                }
-            }
-            else if (Boss2) {
-                graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 20F));
-                graphics2D.setColor(Color.BLACK);
-                graphics2D.drawString("Defeat the Enemy!", panel.tileSize + 2, panel.tileSize + 2+40);
-                graphics2D.setColor(Color.WHITE);
-                graphics2D.drawString("Defeat the Enemy!", panel.tileSize, panel.tileSize+40);
-
-                TutorialCounter++;
-                if (TutorialCounter > 240) {   //240 Frames (60 Frames per sec -> 4 sec)
-                    TutorialCounter = 0;
-                    Boss2 = false;
-                }
-            }
 
             if (panel.player.BOSS_FIGHT){
                 drawPlayerLife();
@@ -879,7 +850,7 @@ public class UserInterface {
 
             graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 22f));
             graphics2D.setColor(Color.WHITE);
-            graphics2D.drawString("Rapist", panel.ScreenWidth- panel.tileSize*3+40, y - 10);
+            graphics2D.drawString("Dieter A. Keller", panel.ScreenWidth- panel.tileSize*5+40, y - 10);
         }
     }
 
@@ -1158,6 +1129,7 @@ public class UserInterface {
                 if (panel.TransitionMap == 2) panel.asset.setObject_HOSPITAL_TOILET();
                 if (panel.TransitionMap == 3) panel.asset.setObject_HOSPITAL_TOILET();
 
+                if (panel.TransitionMap == 4) panel.asset.setObject_HOSPITAL_APOTHECARY();
                 if (panel.TransitionMap == 5) panel.asset.setObject_HOSPITAL_STORAGEF3();
                 if (panel.TransitionMap == 6) panel.asset.setObject_HOSPITAL_OFFICE();
 

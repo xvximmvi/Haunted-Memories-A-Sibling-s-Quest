@@ -36,8 +36,6 @@ public class Manager {
         loadMap("/Maps/Hospital/Apothecary.txt", 4);
         loadMap("/Maps/Hospital/StorageF3.txt", 5);
         loadMap("/Maps/Hospital/Office.txt", 6);
-
-        // F2
     }
 
     // TILE IMAGE
